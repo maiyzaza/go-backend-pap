@@ -1,0 +1,7 @@
+package constants
+
+const ZERO = 0
+const SUCCESS = "Success"
+
+const SABUY_DOPA_ACCESS_TOKEN_KEY = "SABUY_DOPA_ACCESS_TOKEN_KEY"
+const SABUY_DOPA_SCRECT = "SABUY_DOPA_SECRECT_KEY"
