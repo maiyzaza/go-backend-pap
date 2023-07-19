@@ -5,7 +5,6 @@ variables:
   IMAGE_TAG: go-back-end
 
 stages:
-  # - test
   - build
   - deploy
 
@@ -22,30 +21,14 @@ build_image:
     - docker build -t $IMAGE_NAME:$IMAGE_TAG .
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
-# deploy:
-#   stage: deploy
-#   script:
-#     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250
+deploy:
+  stage: deploy
+  before_script:
+    - chmod 400 $SSH_KEY
+  script:
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250"
+      docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+      docker ps -aq | xaegs docker stop | xargs docker rm &&
+      docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
 
-
-
-# format:
-#   stage: test
-#   script:
-#     - go fmt $(go list ./... | grep -v /vendor/)
-#     - go vet $(go list ./... | grep -v /vendor/)
-#     - go test -race $(go list ./... | grep -v /vendor/)
-
-# compile:
-#   stage: build
-#   script:
-#     - mkdir -p mybinaries
-#     - go build -o mybinaries ./...
-#   artifacts:
-#     paths:
-#       - mybinaries
-
-# deploy:
-#   stage: deploy
-#   script: echo "Define your deployment script!"
-#   environment: production
+      
