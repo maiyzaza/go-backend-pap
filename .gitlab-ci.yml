@@ -40,8 +40,7 @@ deploy:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
       docker ps -aq | xargs docker stop | xargs docker rm &&
-      docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG
-      docker ps"
+      docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
 
 
 # docker ps -aq | xargs docker stop | xargs docker rm &&
