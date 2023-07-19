@@ -2,7 +2,7 @@ image: golang:latest
 
 variables:
   IMAGE_NAME: maiyzaza/demo-app
-  IMAGE_TAG: golang:latest
+  IMAGE_TAG: hello_go_http
 
 stages:
   # - test
@@ -17,10 +17,15 @@ build_image:
   variables:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
-    - docker login -u maiyzaza -p maiy27982
+    - docker login -u REGISTRY_USER -p REGISTRY_PASS
   script:
-    - docker build -t maiyzaza/demo-app:hello_go_http .
-    - docker push maiyzaza/demo-app:hello_go_http
+    - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker push $IMAGE_NAME:$IMAGE_TAG
+
+# deploy:
+#   stage: deploy
+#   script:
+#     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250
 
 
 
