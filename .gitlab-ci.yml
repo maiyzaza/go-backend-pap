@@ -4,8 +4,13 @@ variables:
   IMAGE_NAME: maiyzaza/demo-app
   IMAGE_TAG: golang:latest
 
+stages:
+  # - test
+  - build
+  - deploy
 
 build_image:
+  stage: build
   image: docker:24.0.4-cli
   services:
     - docker:24.0.4-dind
@@ -17,10 +22,7 @@ build_image:
     - docker build -t maiyzaza/demo-app:hello_go_http .
     - docker push maiyzaza/demo-app:hello_go_http
 
-# stages:
-  # - test
-#   - build
-#   - deploy
+
 
 # format:
 #   stage: test
