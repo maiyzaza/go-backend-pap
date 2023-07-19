@@ -30,6 +30,7 @@ build_image:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
     - docker build -t $IMAGE_NAME:$IMAGE_TAG .
+    - docker images -aq | xargs docker rmi &&
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
 deploy:
