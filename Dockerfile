@@ -1,34 +1,16 @@
-FROM golang:1.19
-
-RUN mkdir /app
+# Create build stage based on buster image
+FROM golang:1.16-buster AS builder
+# Create working directory under /app
 WORKDIR /app
-COPY . /app
-
+# Copy over all go config (go.mod, go.sum etc.)
+COPY go.* ./
+# Install any required modules
 RUN go mod download
-
-COPY . .
-
-RUN go build -o main main.go
-
+# Copy over Go source code
+COPY *.go ./
+# Run the Go build and output binary under hello_go_http
+RUN go build -o /hello_go_http
+# Make sure to expose the port the HTTP server is using
 EXPOSE 8080
-
-CMD ["/app/main"]
-
-
-# # Create build stage based on buster image
-# FROM golang:latest
-
-# # Set the proper working directory within the Docker build context
-# WORKDIR /app
-
-# # Copy the entire project directory to the Docker build context
-# COPY . .
-
-# # Build the Go binary with vendored dependencies
-# RUN go build -o /hello_go_http
-
-# # Make sure to expose the port the HTTP server is using
-# EXPOSE 8080
-
-# # Run the app binary when we run the container
-# ENTRYPOINT ["/hello_go_http"]
+# Run the app binary when we run the container
+ENTRYPOINT ["/hello_go_http"]
