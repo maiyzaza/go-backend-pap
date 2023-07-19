@@ -5,8 +5,17 @@ variables:
   IMAGE_TAG: go-back-end
 
 stages:
+  - database
   - build
   - deploy
+
+database:
+  stage: database
+  script:
+    -  |
+        cat << EOF > ./staging.env
+              REMOTE_DB_URL="$DB_CONNECTION"
+        EOF
 
 build_image:
   stage: build
