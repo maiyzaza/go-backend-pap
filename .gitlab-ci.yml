@@ -16,6 +16,7 @@ database:
         cat << EOF > ./.env
               REMOTE_DB_URL="$DB_CONNECTION"
         EOF
+        ls
 
 build_image:
   stage: build
