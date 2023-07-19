@@ -16,7 +16,7 @@
 # ENTRYPOINT ["/hello_go_http"]
 
 # Create build stage based on buster image
-FROM golang:1.19 AS builder
+FROM golang:latest
 
 # Set the proper working directory within the Docker build context
 WORKDIR /app
