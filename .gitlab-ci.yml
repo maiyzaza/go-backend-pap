@@ -14,8 +14,8 @@ build_image:
   before_script:
     - docker login -u maiyzaza -p maiy27982
   script:
-    - docker build -t maiyzaza/demo-app:golang:latest .
-    - docker push maiyzaza/demo-app:golang:latest
+    - docker build -t maiyzaza/demo-app:latest .
+    - docker push maiyzaza/demo-app:latest
 
 # stages:
   # - test
