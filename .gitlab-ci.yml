@@ -13,7 +13,7 @@ database:
   stage: database
   script:
     -  |
-        cat << EOF > ./staging.env
+        cat << EOF > ./.env
               REMOTE_DB_URL="$DB_CONNECTION"
         EOF
 
