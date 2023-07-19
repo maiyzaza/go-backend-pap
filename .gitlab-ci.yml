@@ -2,7 +2,7 @@ image: golang:latest
 
 variables:
   IMAGE_NAME: maiyzaza/demo-app
-  IMAGE_TAG: hello_go_http
+  IMAGE_TAG: go-back-end
 
 stages:
   # - test
