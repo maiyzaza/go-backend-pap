@@ -33,10 +33,8 @@ build_image:
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
-      docker image ls || echo 'No Docker images found.' &&
-      docker ps -aq | xargs docker stop || echo 'No running containers found.' &&
-      docker ps -aq | xargs docker rm || echo 'No containers to remove.' &&
-      docker images -aq | xargs docker rmi || echo 'No images to delete.' &&
+      docker images > /dev/null 2>&1 || echo 'No Docker images found.' &&
+      docker images -aq | xargs -r docker rmi > /dev/null 2>&1 || echo 'No images to delete.' &&
       docker build -t $IMAGE_NAME:$IMAGE_TAG . &&
       docker push $IMAGE_NAME:$IMAGE_TAG"
 
