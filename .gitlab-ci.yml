@@ -29,8 +29,8 @@ build_image:
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
     - docker ps -aq | xargs -I {} docker rm {}
-    - docker images -q | xargs -I {} docker rmi {}
   script:
+    - docker images -q | xargs -I {} docker rmi {}
     - docker build -t $IMAGE_NAME:$IMAGE_TAG . 
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
