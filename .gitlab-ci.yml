@@ -1,6 +1,6 @@
 image: golang:latest
 
-# - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+# - 
 
 variables:
   IMAGE_NAME: maiyzaza/demo-app
@@ -31,7 +31,9 @@ build_image:
   before_script:
     - chmod 400 $SSH_KEY
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "docker stop \$(docker ps -aq) && docker rm \$(docker ps -aq) && docker rmi \$(docker images -aq) &&
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
+      docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+      docker stop \$(docker ps -aq) && docker rm \$(docker ps -aq) && docker rmi \$(docker images -aq) &&
       docker build -t $IMAGE_NAME:$IMAGE_TAG . &&
       docker push $IMAGE_NAME:$IMAGE_TAG"
 
