@@ -1,7 +1,5 @@
 image: golang:latest
 
-# - 
-
 variables:
   IMAGE_NAME: maiyzaza/demo-app
   IMAGE_TAG: latest
@@ -34,7 +32,9 @@ build_image:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
       [ $(docker images -q | wc -l) -ne 0 ] && docker rmi $(docker images -q) &&
+      echo "pass" &&
       docker build -t $IMAGE_NAME:$IMAGE_TAG . &&
+      echo "pass1" &&
       docker push $IMAGE_NAME:$IMAGE_TAG"
 
 deploy:
