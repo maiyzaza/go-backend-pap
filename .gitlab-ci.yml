@@ -38,8 +38,8 @@ deploy:
   before_script:
     - chmod 400 $SSH_KEY
   script:
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 " &&
-      [ $(docker images -q | wc -l) -ne 0 ] && docker rmi $(docker images -q) &&
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
+      '[ $(docker images -q | wc -l) -ne 0 ]' && docker rmi $(docker images -q) &&
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
       docker ps -aq | xargs docker stop | xargs docker rm &&
       docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
