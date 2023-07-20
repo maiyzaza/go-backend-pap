@@ -16,6 +16,7 @@ type SecondaryContract struct {
 	CheckInWaterNumber     *float32   `gorm:"water_number"`
 	CheckOutElectricNumber *float32   `gorm:"electric_number"`
 	CheckOutWaterNumber    *float32   `gorm:"water_number"`
+	IsClosed               bool       `gorm:"is_closed"`
 	IsActive               bool       `gorm:"is_active"`
 	CreatedAt              time.Time  `gorm:"created_at"`
 	UpdatedAt              *time.Time `gorm:"updated_at"`
