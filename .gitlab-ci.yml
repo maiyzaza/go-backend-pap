@@ -13,9 +13,11 @@ database:
   stage: database
   script:
     -  |
-        cat << EOF > ./staging.env
+        cat << EOF > .env
               REMOTE_DB_URL="$DB_CONNECTION"
         EOF
+        ls -la
+        cat .env
 
 build_image:
   stage: build
@@ -26,6 +28,7 @@ build_image:
     DOCKER_TLS_CERTDIR: "/certs"
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
+    - docker images -aq | xargs docker rmi &&
   script:
     - docker build -t $IMAGE_NAME:$IMAGE_TAG .
     - docker push $IMAGE_NAME:$IMAGE_TAG
@@ -36,10 +39,7 @@ deploy:
     - chmod 400 $SSH_KEY
   script:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
-      docker login -u $REGISTRY_USER -p $REGISTRY_PASS && 
+      docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
+      docker ps -aq | xargs docker stop | xargs docker rm &&
       docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
-      # docker ps -aq | xargs docker stop | xargs docker rm &&
 
-
-
-      
