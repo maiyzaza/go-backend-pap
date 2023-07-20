@@ -4,7 +4,7 @@ image: golang:latest
 
 variables:
   IMAGE_NAME: maiyzaza/demo-app
-  IMAGE_TAG: go-back-end
+  IMAGE_TAG: latest
 
 stages:
   - database
