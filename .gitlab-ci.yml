@@ -29,7 +29,6 @@ build_image:
   before_script:
     - chmod 400 $SSH_KEY
   script:
-    - docker login -u $REGISTRY_USER -p $REGISTRY_PASS 
     - docker build -t $IMAGE_NAME:$IMAGE_TAG . 
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
