@@ -31,11 +31,10 @@ build_image:
   before_script:
     - chmod 400 $SSH_KEY
   script:
-    - ls -la
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
       docker image ls &&
-      docker image ls -qa | xargs -r docker rmi &&
+      docker rmi $IMAGE_NAME:$IMAGE_TAG &&
       docker image ls &&
       docker build -t $IMAGE_NAME:$IMAGE_TAG . &&
       docker push $IMAGE_NAME:$IMAGE_TAG"
