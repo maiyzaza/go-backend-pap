@@ -1,35 +1,41 @@
 package main
 
 import (
+	"PattayaAvenueProperty/config"
 	models_Contract "PattayaAvenueProperty/models/Contract"
 	models_Document "PattayaAvenueProperty/models/Document"
 	models_Person "PattayaAvenueProperty/models/Person"
 	models_Room "PattayaAvenueProperty/models/Room"
 	models_Transaction "PattayaAvenueProperty/models/TransactionModel"
+	"fmt"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func main() {
-	dsn := "root:my-secret-pw@tcp(localhost:1433)/mysql"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	config.LoadEnvVariables()
+	dbREMOTE_DB_URL := os.Getenv("REMOTE_DB_URL")
+	dataSourceName := dbREMOTE_DB_URL
+	fmt.Println("dataSourceName: ", dataSourceName)
+
+	// var err error
+	// DB, err = gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	db, err := gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
 	if err != nil {
 		panic(err)
 	}
 
 	// Create the new "PattayaAvenueProperty" database
-	err = db.Exec("CREATE DATABASE IF NOT EXISTS PattayaAvenueProperty").Error
-	if err != nil {
-		panic(err)
-	}
-
-	// Connect to the "PattayaAvenueProperty" database
-	dsn = "root:my-secret-pw@tcp(localhost:1433)/PattayaAvenueProperty"
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(err)
-	}
+	// err = db.Exec("CREATE DATABASE IF NOT EXISTS PattayaAvenueProperty").Error
+	// if err != nil {
+	// 	panic(err)
+	// }
 
 	// Perform migrations on the "PattayaAvenueProperty" database
 	db.AutoMigrate(

@@ -14,10 +14,10 @@ type RoomContract struct {
 	EndContractDate        time.Time  `gorm:"end_contract_date"`
 	Rental                 float32    `gorm:"rental"`
 	Deposit                float32    `gorm:"deposit"`
-	CheckInElectricNumber  int        `gorm:"check_in_electric_number"`
-	CheckInWaterNumber     int        `gorm:"check_in_water_number"`
-	CheckOutElectricNumber int        `gorm:"check_out_electric_number"`
-	CheckOutWaterNumber    int        `gorm:"check_out_water_number"`
+	CheckInElectricNumber  *int       `gorm:"check_in_electric_number"`
+	CheckInWaterNumber     *int       `gorm:"check_in_water_number"`
+	CheckOutElectricNumber *int       `gorm:"check_out_electric_number"`
+	CheckOutWaterNumber    *int       `gorm:"check_out_water_number"`
 	CheckInDate            *time.Time `gorm:"check_in_date"`
 	CheckOutDate           *time.Time `gorm:"check_out_date"`
 	IsClosed               bool       `gorm:"is_closed"`
