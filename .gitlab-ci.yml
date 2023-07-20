@@ -34,7 +34,7 @@ build_image:
     - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "
       docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
       docker image ls &&
-      docker rmi --force $IMAGE_NAME:$IMAGE_TAG &&
+      docker rmi -f $(docker images -aq) &&
       docker image ls &&
       docker build -t $IMAGE_NAME:$IMAGE_TAG . &&
       docker push $IMAGE_NAME:$IMAGE_TAG"
