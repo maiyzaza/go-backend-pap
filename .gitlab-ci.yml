@@ -29,7 +29,7 @@ build_image:
   before_script:
     - chmod 400 $SSH_KEY
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
-    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "docker images -aq | xargs docker rmi"
+    - ssh -o StrictHostKeyChecking=no -i $SSH_KEY root@146.190.98.250 "docker stop \$(docker ps -aq) && docker rm \$(docker ps -aq) && docker rmi \$(docker images -aq)"
   script:
     - docker build -t $IMAGE_NAME:$IMAGE_TAG .
     - docker push $IMAGE_NAME:$IMAGE_TAG
