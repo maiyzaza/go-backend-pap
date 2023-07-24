@@ -2,8 +2,7 @@ package app
 
 import (
 	"fmt"
-
-	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type App struct {
@@ -28,12 +27,14 @@ func New() *App {
 		Controller: controller,
 	}
 
-	router := gin.Default()
-	err := router.Run(":5000")
+	port := ":8080"
+
+	// Start the server and listen on the specified port
+	fmt.Printf("Server is listening on port %s...\n", port)
+	err := http.ListenAndServe(port, nil)
 	if err != nil {
-		panic("[Error] failed to start Gin server due to: " + err.Error())
+		fmt.Printf("Error starting the server: %v", err)
 	}
-	// fmt.Println("Gin server is running on port 5000")
 	fmt.Println("App is running app.go")
 
 	return &app
