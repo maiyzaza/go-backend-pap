@@ -1,10 +1,10 @@
 package db
 
 import (
-	"PattayaAvenueProperty/config"
+	// "PattayaAvenueProperty/config"
 	"fmt"
 	"log"
-	"os"
+	// "os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
