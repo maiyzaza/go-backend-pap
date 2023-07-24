@@ -13,8 +13,8 @@ import (
 var DB *gorm.DB
 
 func ConnectToDB() {
-	config.LoadEnvVariables()
-	dbREMOTE_DB_URL := os.Getenv("REMOTE_DB_URL")
+	// config.LoadEnvVariables()
+	// dbREMOTE_DB_URL := os.Getenv("REMOTE_DB_URL")
 	// dbHost := os.Getenv("DB_HOST")
 	// dbPort := os.Getenv("DB_PORT")
 	// dbUser := os.Getenv("DB_USER")
