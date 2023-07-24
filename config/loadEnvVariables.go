@@ -12,7 +12,7 @@ func LoadEnvVariables() {
 	// Load environment variables from .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file: %s", err)
+		fmt.Printf("Error loading .env file: %s", err)
 	}
 
 	// Access environment variables
