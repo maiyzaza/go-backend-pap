@@ -12,9 +12,6 @@ stages:
 
 database:
   stage: database
-  image: docker:24.0.4-cli
-  services:
-    - docker:24.0.4-dind
   script:
     -  |
         cat << EOF > ./.env
@@ -25,6 +22,9 @@ database:
 
 delete_image:
   stage: deleteImage
+  image: docker:24.0.4-cli
+  services:
+    - docker:24.0.4-dind
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
