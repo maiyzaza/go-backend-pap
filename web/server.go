@@ -13,6 +13,7 @@ func StartServer(app *app.App) {
 	r := gin.Default()
 	r.Use(middleware.ErrorHandle())
 	r.Use(middleware.CORSMiddleware())
+	r.Run(":5000")
 
 	if _, err := routes.SetUpRoutes(&r.RouterGroup, app.Controller); err != nil {
 		panic(err)
