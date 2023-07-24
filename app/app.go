@@ -29,11 +29,11 @@ func New() *App {
 	}
 
 	router := gin.Default()
-	err := router.Run(":9888")
+	err := router.Run(":5000")
 	if err != nil {
 		panic("[Error] failed to start Gin server due to: " + err.Error())
 	}
-	fmt.Println("Gin server is running on port 9888")
+	// fmt.Println("Gin server is running on port 5000")
 	fmt.Println("App is running app.go")
 
 	return &app
