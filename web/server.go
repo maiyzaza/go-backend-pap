@@ -18,7 +18,7 @@ func StartServer(app *app.App) {
 		panic(err)
 	}
 
-	if err := r.Run(); err != nil {
+	if err := r.Run(":5000"); err != nil {
 		panic("Failed to start the project")
 	}
 }

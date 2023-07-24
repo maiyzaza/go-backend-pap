@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"net/http"
 )
 
 type App struct {
@@ -25,15 +24,6 @@ func New() *App {
 	app := App{
 		Repository: repository,
 		Controller: controller,
-	}
-
-	port := ":8080"
-
-	// Start the server and listen on the specified port
-	fmt.Printf("Server is listening on port %s...\n", port)
-	err := http.ListenAndServe(port, nil)
-	if err != nil {
-		fmt.Printf("Error starting the server: %v", err)
 	}
 	fmt.Println("App is running app.go")
 
