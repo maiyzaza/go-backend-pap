@@ -35,9 +35,9 @@ delete_image:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
     - docker ps
     - docker image ls 
-    - docker ps -aq | xargs -I {} docker rm {}
+    - docker ps -aq | xargs -I {} sh -c 'docker stop {} && docker rm {}'
   script:
-    - docker images -q | xargs -I {} docker rmi {}
+    - docker ps -q | xargs -I {} docker stop {} && docker images -q | xargs -I {} docker rmi -f {}
     - docker ps
     - docker image ls 
 
