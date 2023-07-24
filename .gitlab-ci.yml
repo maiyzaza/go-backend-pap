@@ -5,20 +5,9 @@ variables:
   IMAGE_TAG: latest
 
 stages:
-  - database
   - deleteImage
   - buildImage
   - deploy
-
-database:
-  stage: database
-  script:
-    -  |
-        cat << EOF > ./.env
-              REMOTE_DB_URL="$DB_CONNECTION"
-        EOF
-        ls -la
-        cat .env
 
 delete_image:
   stage: deleteImage
