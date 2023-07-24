@@ -23,7 +23,7 @@ stages:
 create_env_file:
   stage: create_env_file
   script:
-    - echo "REMOTE_DB_URL=$RDB_CONNECTION" >> .env
+    - echo "REMOTE_DB_URL=$DB_CONNECTION" >> .env
     - cat .env
 
 delete_image:
