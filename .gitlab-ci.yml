@@ -27,8 +27,9 @@ delete_image:
     - docker:24.0.4-dind
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
-  script:
     - docker ps -aq | xargs -I {} docker rm {}
+  script:
+    - docker images -q | xargs -I {} docker rmi {}
 
 build_image:
   stage: buildImage
@@ -40,7 +41,6 @@ build_image:
   before_script:
     - docker login -u $REGISTRY_USER -p $REGISTRY_PASS
   script:
-    - docker images -q | xargs -I {} docker rmi {}
     - docker build -t $IMAGE_NAME:$IMAGE_TAG . 
     - docker push $IMAGE_NAME:$IMAGE_TAG
 
