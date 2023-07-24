@@ -62,3 +62,4 @@ deploy:
         docker login -u $REGISTRY_USER -p $REGISTRY_PASS &&
         docker ps -aq | xargs -I {} docker rm {} &&
         docker run -d -p 5000:5000 $IMAGE_NAME:$IMAGE_TAG"
+
