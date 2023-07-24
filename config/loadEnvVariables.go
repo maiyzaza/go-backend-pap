@@ -8,22 +8,33 @@ import (
 )
 
 var ENV *string
-
 func LoadEnvVariables() {
-	if err := godotenv.Load(".env"); err != nil {
-		fmt.Println("No environment file found")
+	// Load environment variables from .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %s", err)
 	}
-	dbURL := os.Getenv("DB_CONNECTION")
-    if dbURL == "" {
-        fmt.Println("DB_CONNECTION environment variable is not set.")
-        return
-    }
 
-//		dbHost := os.Getenv("REMOTE_DB_URL")
-	ENV = &dbURL // Assuming ENV is used to store the DB_HOST value
-	fmt.Printf("This environment state \"DB_HOST=%s\" is still running...\n", *ENV)
-	
+	// Access environment variables
+	remoteDbURL := os.Getenv("REMOTE_DB_URL")
+	fmt.Printf("This environment state \"DB_HOST=%s\" is still running...\n", *remoteDbURL)
+	// Now you can use the 'remoteDbURL' variable in your Go code
 }
+// func LoadEnvVariables() {
+// 	if err := godotenv.Load(".env"); err != nil {
+// 		fmt.Println("No environment file found")
+// 	}
+// 	dbURL := os.Getenv("DB_CONNECTION")
+//     if dbURL == "" {
+//         fmt.Println("DB_CONNECTION environment variable is not set.")
+//         return
+//     }
+
+// //		dbHost := os.Getenv("REMOTE_DB_URL")
+// 	ENV = &dbURL // Assuming ENV is used to store the DB_HOST value
+// 	fmt.Printf("This environment state \"DB_HOST=%s\" is still running...\n", *ENV)
+	
+// }
 // func LoadEnvVariables() {
 //     // Assuming ENV is used to store the DB_HOST value
 //     envFilePath := os.Getenv("ENV_FILE_PATH")
