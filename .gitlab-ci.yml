@@ -12,6 +12,9 @@ stages:
 
 database:
   stage: database
+  image: docker:24.0.4-cli
+  services:
+    - docker:24.0.4-dind
   script:
     -  |
         cat << EOF > ./.env
