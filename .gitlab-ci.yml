@@ -6,6 +6,7 @@ variables:
 
 stages:
 #  - database
+  - create_env_file
   - deleteImage
   - buildImage
   - deploy
@@ -19,6 +20,11 @@ stages:
 #        EOF
 #        ls -la
 #        cat .env
+create_env_file:
+  stage: create_env_file
+  script:
+    - echo "REMOTE_DB_URL=$RDB_CONNECTION" >> .env
+    - cat .env
 
 delete_image:
   stage: deleteImage
