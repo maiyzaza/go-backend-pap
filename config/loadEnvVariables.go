@@ -17,7 +17,8 @@ func LoadEnvVariables() {
 
 	// Access environment variables
 	remoteDbURL := os.Getenv("REMOTE_DB_URL")
-	fmt.Printf("This environment state \"DB_HOST=%s\" is still running...\n", *remoteDbURL)
+	ENV = &remoteDbURL
+	fmt.Printf("This environment state \"DB_HOST=%s\" is still running...\n", *ENV)
 	// Now you can use the 'remoteDbURL' variable in your Go code
 }
 // func LoadEnvVariables() {
