@@ -14,7 +14,10 @@ func SetUpRoutes(router *gin.RouterGroup, ctrl *app.SetupController) (*gin.Route
 		{
 			setupPersonRoutes(personRoute, ctrl.PersonController)
 		}
+		roomRoute := route.Group("rooms")
+		{
+			setupRoomRoutes(roomRoute, ctrl.RoomController)
+		}
 	}
-
 	return route, nil
 }

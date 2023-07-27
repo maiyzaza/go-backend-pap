@@ -24,6 +24,7 @@ func New() *App {
 	app := App{
 		Repository: repository,
 		Controller: controller,
+		Service:    service,
 	}
 	fmt.Println("App is running app.go")
 
