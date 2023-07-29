@@ -12,6 +12,11 @@ type BuildingDto struct {
 	Floors       []FloorDto `json:"floors" gorm:"column:floor"`
 }
 
+type BuildingPostDto struct {
+	PlaceID      uint   `json:"place_id"`
+	BuildingName string `json:"building_name"`
+}
+
 type FloorDto struct {
 	FloorID     uint   `json:"floor_id" gorm:"column:floor_id"`
 	FloorNumber string `json:"floor_number" gorm:"column:floor_number"`

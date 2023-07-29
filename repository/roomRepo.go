@@ -29,3 +29,11 @@ func (repo RoomRepo) CreatePlace(place models_Room.Place) (*models_Room.Place, e
 	}
 	return &place, nil
 }
+
+func (repo RoomRepo) CreateBuilding(building models_Room.Building) (*models_Room.Building, error) {
+	err := db.DB.Create(&building).Error
+	if err != nil {
+		return nil, err
+	}
+	return &building, nil
+}

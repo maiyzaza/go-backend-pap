@@ -3,9 +3,9 @@ package service
 import (
 	models_Room "PattayaAvenueProperty/models/Room"
 	"PattayaAvenueProperty/repository"
+	"fmt"
 
 	Dto "PattayaAvenueProperty/service/dto"
-	// Dto "PattayaAvenueProperty/service/dto/person"
 )
 
 type RoomService struct {
@@ -40,7 +40,6 @@ func (service *RoomService) GetAllPlace() ([]Dto.PlaceDto, error) {
 				Floors:       floors,
 			})
 		}
-		// Move the result append outside the building loop
 		result = append(result, Dto.PlaceDto{
 			PlaceID:   place.ID,
 			PlaceName: place.PlaceName,
@@ -65,18 +64,19 @@ func (service *RoomService) CreatePlace(placeName string) error {
 	return nil
 }
 
-// func (service *RoomService) CreateBuilding(placeID uint, buildingName string) error {
-// 	buildingModel := models_Room.Building{
-// 		BuildingName: buildingName,
-// 		PlaceID:      placeID,
-// 		Floors:       []models_Room.Floor{},
-// 		IsActive:     true,
-// 	}
+func (service *RoomService) CreateBuilding(placeID uint, buildingName string) error {
+	buildingModel := models_Room.Building{
+		BuildingName: buildingName,
+		PlaceID:      placeID,
+		Floors:       []models_Room.Floor{},
+		IsActive:     true,
+	}
 
-// 	_, err := service.roomRepo.CreateBuilding(buildingModel)
+	fmt.Println(buildingModel)
+	_, err := service.roomRepo.CreateBuilding(buildingModel)
 
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+	if err != nil {
+		return err
+	}
+	return nil
+}
