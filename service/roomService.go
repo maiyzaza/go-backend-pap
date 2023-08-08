@@ -1,6 +1,7 @@
 package service
 
 import (
+	models "PattayaAvenueProperty/models/Room"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"PattayaAvenueProperty/repository"
 	"fmt"
@@ -23,27 +24,66 @@ func (service *RoomService) GetAllPlace() ([]Dto.PlaceDto, error) {
 	if err != nil {
 		return nil, err
 	}
+	buildings, err := service.roomRepo.GetAllBuilding()
+	if err != nil {
+		return nil, err
+	}
+	floors, err := service.roomRepo.GetAllFloor()
+	if err != nil {
+		return nil, err
+	}
+	rooms, err := service.roomRepo.GetAllRoom()
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a map to store rooms indexed by floor ID
+	roomsByFloorID := make(map[uint][]Dto.RoomDto)
+	for _, room := range rooms {
+		roomsByFloorID[room.FloorID] = append(roomsByFloorID[room.FloorID], Dto.RoomDto{
+			RoomID:   room.ID,
+			RoomName: *room.RoomName,
+		})
+	}
+	fmt.Println(roomsByFloorID)
+
 	var result []Dto.PlaceDto
 	for _, place := range places {
-		var buildings []Dto.BuildingDto
-		for _, building := range place.Buildings {
-			var floors []Dto.FloorDto
-			for _, floor := range building.Floors {
-				floors = append(floors, Dto.FloorDto{
-					FloorID:     floor.ID,
-					FloorNumber: floor.FloorNumber,
+		var buildingsDto []Dto.BuildingDto
+		for _, building := range buildings {
+			if building.PlaceID == place.ID {
+				var floorsDto []Dto.FloorDto
+				for _, floor := range floors {
+					fmt.Println(floor.BuildingID, building.ID)
+					if floor.BuildingID == building.ID {
+						// Include floors only if there are rooms associated with them
+						if roomsForFloor, ok := roomsByFloorID[floor.ID]; ok {
+							floorsDto = append(floorsDto, Dto.FloorDto{
+								FloorID:     floor.ID,
+								FloorNumber: floor.FloorNumber,
+								Rooms:       roomsForFloor,
+							})
+						} else {
+							floorsDto = append(floorsDto, Dto.FloorDto{
+								FloorID:     floor.ID,
+								FloorNumber: floor.FloorNumber,
+								Rooms:       nil,
+							})
+						}
+					}
+				}
+				fmt.Println(floorsDto)
+				buildingsDto = append(buildingsDto, Dto.BuildingDto{
+					BuildingID:   building.ID,
+					BuildingName: building.BuildingName,
+					Floors:       floorsDto,
 				})
 			}
-			buildings = append(buildings, Dto.BuildingDto{
-				BuildingID:   building.ID,
-				BuildingName: building.BuildingName,
-				Floors:       floors,
-			})
 		}
 		result = append(result, Dto.PlaceDto{
 			PlaceID:   place.ID,
 			PlaceName: place.PlaceName,
-			Buildings: buildings,
+			Buildings: buildingsDto,
 		})
 	}
 	return result, nil
@@ -79,4 +119,65 @@ func (service *RoomService) CreateBuilding(placeID uint, buildingName string) er
 		return err
 	}
 	return nil
+}
+
+func (service *RoomService) CreateFloor(buildingID uint, floorNumber string) error {
+	floorModel := models_Room.Floor{
+		FloorNumber: floorNumber,
+		BuildingID:  buildingID,
+		IsActive:    true,
+	}
+
+	_, err := service.roomRepo.CreateFloor(floorModel)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *RoomService) CreateRoom(floorID uint, roomName string) error {
+	roomModel := models_Room.Room{
+		RoomName: &roomName,
+		FloorID:  floorID,
+		IsActive: true,
+	}
+
+	_, err := service.roomRepo.CreateRoom(roomModel)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*models.Room, error) {
+	// Fetch the existing room from the database using the room ID
+	existingRoom, err := service.roomRepo.GetRoomByID(roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Update the existing room with the new information
+	existingRoom.RoomName = updatedRoom.RoomName
+	existingRoom.RoomNumber = updatedRoom.RoomNumber
+	existingRoom.RoomAddress = updatedRoom.RoomAddress
+	existingRoom.ElectricNumber = updatedRoom.ElectricNumber
+	existingRoom.ElectricUserNumber = updatedRoom.ElectricUserNumber
+	existingRoom.AmountOfBedRoom = updatedRoom.AmountOfBedRoom
+	existingRoom.AmountOfToiletRoom = updatedRoom.AmountOfToiletRoom
+	existingRoom.AmountOfLivingRoom = updatedRoom.AmountOfLivingRoom
+	existingRoom.SizeSQM = updatedRoom.SizeSQM
+	existingRoom.TypeOfView = updatedRoom.TypeOfView
+	existingRoom.Remark = updatedRoom.Remark
+	existingRoom.StatusOfRoom = updatedRoom.StatusOfRoom
+	// Update other fields as needed
+
+	// Save the modified room back to the database
+	modifiedRoom, err := service.roomRepo.ModifyRoom(*existingRoom)
+	if err != nil {
+		return nil, err
+	}
+
+	return modifiedRoom, nil
 }

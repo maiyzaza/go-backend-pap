@@ -21,6 +21,7 @@ type Room struct {
 	SizeSQM            float32    `gorm:"size_sqm"`
 	TypeOfView         string     `gorm:"type_of_view"` // sea, city, city and sea
 	Remark             *string    `gorm:"remark"`
+	StatusOfRoom       string     `gorm:"status_of_room"` // Rent, Sale, Rent and Sale, Returned
 	IsActive           bool       `gorm:"is_active"`
 	CreatedAt          time.Time  `gorm:"created_at"`
 	UpdatedAt          *time.Time `gorm:"updated_at"`
