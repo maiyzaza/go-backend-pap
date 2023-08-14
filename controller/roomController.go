@@ -167,3 +167,27 @@ func (controller *RoomController) EditRoom(c *gin.Context) {
 		Data:       modifiedRoom,
 	})
 }
+
+func (controller *RoomController) GetRoomByID(c *gin.Context) {
+	roomID := c.Param("roomID")
+	// Convert roomID to uint
+	roomIDUint, err := strconv.ParseUint(roomID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid room ID",
+		})
+		return
+	}
+
+	room, err := controller.roomService.GetRoomByID(uint(roomIDUint))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       room,
+	})
+}

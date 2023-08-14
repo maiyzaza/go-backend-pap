@@ -151,14 +151,44 @@ func (service *RoomService) CreateRoom(floorID uint, roomName string) error {
 	return nil
 }
 
-func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*models.Room, error) {
-	// Fetch the existing room from the database using the room ID
+func (service *RoomService) GetRoomByID(roomID uint) (*Dto.RoomResponseDto, error) {
+	room, err := service.roomRepo.GetRoomByID(roomID)
+	if err != nil {
+		return nil, err
+	}
+
+	// Convert to RoomResponse model
+	roomResponse := Dto.RoomResponseDto{
+		ID:                 room.ID,
+		OwnerID:            room.OwnerID,
+		FloorID:            room.FloorID,
+		RoomName:           room.RoomName,
+		RoomNumber:         room.RoomNumber,
+		RoomAddress:        room.RoomAddress,
+		ElectricNumber:     room.ElectricNumber,
+		ElectricUserNumber: room.ElectricUserNumber,
+		AmountOfBedRoom:    room.AmountOfBedRoom,
+		AmountOfToiletRoom: room.AmountOfToiletRoom,
+		AmountOfLivingRoom: room.AmountOfLivingRoom,
+		SizeSQM:            room.SizeSQM,
+		TypeOfView:         room.TypeOfView,
+		Remark:             room.Remark,
+		StatusOfRoom:       room.StatusOfRoom,
+		IsActive:           room.IsActive,
+		CreatedAt:          room.CreatedAt.String(),
+		UpdatedAt:          room.UpdatedAt.String(),
+	}
+
+	return &roomResponse, nil
+}
+
+func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*Dto.RoomResponseDto, error) {
 	existingRoom, err := service.roomRepo.GetRoomByID(roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	// Update the existing room with the new information
+	// Update the existing room fields here...
 	existingRoom.RoomName = updatedRoom.RoomName
 	existingRoom.RoomNumber = updatedRoom.RoomNumber
 	existingRoom.RoomAddress = updatedRoom.RoomAddress
@@ -171,7 +201,7 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*m
 	existingRoom.TypeOfView = updatedRoom.TypeOfView
 	existingRoom.Remark = updatedRoom.Remark
 	existingRoom.StatusOfRoom = updatedRoom.StatusOfRoom
-	// Update other fields as needed
+	// ... Update other fields as needed
 
 	// Save the modified room back to the database
 	modifiedRoom, err := service.roomRepo.ModifyRoom(*existingRoom)
@@ -179,5 +209,27 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*m
 		return nil, err
 	}
 
-	return modifiedRoom, nil
+	// Convert to RoomResponse model
+	modifiedRoomResponse := Dto.RoomResponseDto{
+		ID:                 modifiedRoom.ID,
+		OwnerID:            modifiedRoom.OwnerID,
+		FloorID:            modifiedRoom.FloorID,
+		RoomName:           modifiedRoom.RoomName,
+		RoomNumber:         modifiedRoom.RoomNumber,
+		RoomAddress:        modifiedRoom.RoomAddress,
+		ElectricNumber:     modifiedRoom.ElectricNumber,
+		ElectricUserNumber: modifiedRoom.ElectricUserNumber,
+		AmountOfBedRoom:    modifiedRoom.AmountOfBedRoom,
+		AmountOfToiletRoom: modifiedRoom.AmountOfToiletRoom,
+		AmountOfLivingRoom: modifiedRoom.AmountOfLivingRoom,
+		SizeSQM:            modifiedRoom.SizeSQM,
+		TypeOfView:         modifiedRoom.TypeOfView,
+		Remark:             modifiedRoom.Remark,
+		StatusOfRoom:       modifiedRoom.StatusOfRoom,
+		IsActive:           modifiedRoom.IsActive,
+		CreatedAt:          modifiedRoom.CreatedAt.String(),
+		UpdatedAt:          modifiedRoom.UpdatedAt.String(),
+	}
+
+	return &modifiedRoomResponse, nil
 }

@@ -6,6 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func setupPersonRoutes(r *gin.RouterGroup, customerController controller.PersonController) {
-	r.GET("/profiles", customerController.GetProfiles)
+func setupPersonRoutes(r *gin.RouterGroup, personController controller.PersonController) {
+	r.GET("/profiles", personController.GetProfiles)
 }

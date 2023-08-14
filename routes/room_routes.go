@@ -6,11 +6,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func setupRoomRoutes(r *gin.RouterGroup, customerController controller.RoomController) {
-	r.GET("/places", customerController.GetAllPlace)
-	r.POST("/places/:placeName", customerController.CreatePlace)
-	r.POST("/building", customerController.CreateBuilding)
-	r.POST("/floor", customerController.CreateFloor)
-	r.POST("/room", customerController.CreateRoom)
-	r.POST("/editroom/:roomID", customerController.EditRoom)
+func setupRoomRoutes(r *gin.RouterGroup, roomController controller.RoomController) {
+	r.GET("/places", roomController.GetAllPlace)
+	r.POST("/places/:placeName", roomController.CreatePlace)
+	r.POST("/building", roomController.CreateBuilding)
+	r.POST("/floor", roomController.CreateFloor)
+	r.POST("/room", roomController.CreateRoom)
+	r.POST("/editroom/:roomID", roomController.EditRoom)
+	r.GET("/room/:roomID", roomController.GetRoomByID)
 }
