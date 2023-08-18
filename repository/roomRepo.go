@@ -2,7 +2,7 @@ package repository
 
 import (
 	"PattayaAvenueProperty/db"
-	models "PattayaAvenueProperty/models/Room"
+	models_Person "PattayaAvenueProperty/models/Person"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"fmt"
 )
@@ -16,9 +16,7 @@ func NewRoomRepo() RoomRepo {
 // Get all places, buildings, floors, rooms
 func (repo RoomRepo) GetAllPlace() ([]models_Room.Place, error) {
 	var model []models_Room.Place
-	// err := db.DB.Preload("Buildings.Floors").Find(&model).Error
 	err := db.DB.Find(&model).Error
-	// fmt.Println(model)
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -29,7 +27,6 @@ func (repo RoomRepo) GetAllPlace() ([]models_Room.Place, error) {
 func (repo RoomRepo) GetAllBuilding() ([]models_Room.Building, error) {
 	var model []models_Room.Building
 	err := db.DB.Find(&model).Error
-	// fmt.Println(model)
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -40,7 +37,6 @@ func (repo RoomRepo) GetAllBuilding() ([]models_Room.Building, error) {
 func (repo RoomRepo) GetAllFloor() ([]models_Room.Floor, error) {
 	var model []models_Room.Floor
 	err := db.DB.Find(&model).Error
-	// fmt.Println(model)
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -91,7 +87,7 @@ func (repo RoomRepo) CreateRoom(room models_Room.Room) (*models_Room.Room, error
 	return &room, nil
 }
 
-func (repo RoomRepo) ModifyRoom(room models.Room) (*models.Room, error) {
+func (repo RoomRepo) ModifyRoom(room models_Room.Room) (*models_Room.Room, error) {
 	err := db.DB.Save(&room).Error
 	if err != nil {
 		return nil, err
@@ -99,12 +95,42 @@ func (repo RoomRepo) ModifyRoom(room models.Room) (*models.Room, error) {
 	return &room, nil
 }
 
-func (repo RoomRepo) GetRoomByID(roomID uint) (*models.Room, error) {
-	var room models.Room
+func (repo RoomRepo) GetRoomByID(roomID uint) (*models_Room.Room, error) {
+	var room models_Room.Room
 	err := db.DB.First(&room, roomID).Error
 	if err != nil {
 		fmt.Println("Error finding room:", err)
 		return nil, err
 	}
 	return &room, nil
+}
+
+func (repo RoomRepo) GetAllRoomPrices() ([]models_Room.RoomPrice, error) {
+	var prices []models_Room.RoomPrice
+	err := db.DB.Find(&prices).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return prices, nil
+}
+
+func (repo RoomRepo) GetAllPersons() ([]models_Person.Person, error) {
+	var models []models_Person.Person
+	err := db.DB.Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return models, nil
+}
+
+func (repo RoomRepo) GetAllContacts() ([]models_Person.Contact, error) {
+	var models []models_Person.Contact
+	err := db.DB.Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return models, nil
 }

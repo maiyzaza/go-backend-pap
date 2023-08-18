@@ -29,8 +29,13 @@ type CreateFloorDto struct {
 }
 
 type RoomDto struct {
-	RoomID   uint   `json:"room_id" gorm:"column:room_id"`
-	RoomName string `json:"room_name" gorm:"column:room_name"`
+	RoomID       uint    `json:"room_id" gorm:"column:room_id"`
+	RoomNumber   string  `json:"room_number" gorm:"column:room_number"`
+	RoomSize     float32 `json:"room_size" gorm:"column:room_size"`
+	RoomPrice    string  `json:"room_price" gorm:"column:room_price"`
+	OwnerName    string  `json:"owner_name" gorm:"column:owner_name"`
+	OwnerContact string  `json:"owner_contacts" gorm:"column:owner_contacts"`
+	StatusOfRoom string  `json:"status_of_room" gorm:"column:status_of_room"`
 }
 
 type CreateRoomDto struct {

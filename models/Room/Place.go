@@ -5,10 +5,10 @@ import (
 )
 
 type Place struct {
-	ID        uint       `gorm:"primaryKey"`
-	PlaceName string     `gorm:"place_name"`
-	IsActive  bool       `gorm:"is_active"`
-	CreatedAt time.Time  `gorm:"created_at"`
-	UpdatedAt *time.Time `gorm:"updated_at"`
-	Buildings []Building `gorm:"building;foreignKey:place_id"`
+	ID        uint       `json:"ID" gorm:"primaryKey"`
+	PlaceName string     `json:"PlaceName" gorm:"place_name"`
+	IsActive  bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt *time.Time `json:"UpdatedAt" gorm:"updated_at"`
+	Buildings []Building `json:"Buildings" gorm:"building;foreignKey:place_id"`
 }

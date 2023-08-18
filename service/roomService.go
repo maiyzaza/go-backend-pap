@@ -1,12 +1,12 @@
 package service
 
 import (
-	models "PattayaAvenueProperty/models/Room"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"PattayaAvenueProperty/repository"
+	dto "PattayaAvenueProperty/service/dto"
+	"encoding/json"
 	"fmt"
-
-	Dto "PattayaAvenueProperty/service/dto"
+	"strconv"
 )
 
 type RoomService struct {
@@ -19,7 +19,7 @@ func NewRoomService(roomRepo repository.RoomRepo) RoomService {
 	}
 }
 
-func (service *RoomService) GetAllPlace() ([]Dto.PlaceDto, error) {
+func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 	places, err := service.roomRepo.GetAllPlace()
 	if err != nil {
 		return nil, err
@@ -36,35 +36,130 @@ func (service *RoomService) GetAllPlace() ([]Dto.PlaceDto, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Create a map to store rooms indexed by floor ID
-	roomsByFloorID := make(map[uint][]Dto.RoomDto)
-	for _, room := range rooms {
-		roomsByFloorID[room.FloorID] = append(roomsByFloorID[room.FloorID], Dto.RoomDto{
-			RoomID:   room.ID,
-			RoomName: *room.RoomName,
-		})
+	persons, err := service.roomRepo.GetAllPersons()
+	if err != nil {
+		return nil, err
 	}
-	fmt.Println(roomsByFloorID)
+	roomPrices, err := service.roomRepo.GetAllRoomPrices()
+	if err != nil {
+		return nil, err
+	}
+	personContacts, err := service.roomRepo.GetAllContacts()
+	if err != nil {
+		return nil, err
+	}
 
-	var result []Dto.PlaceDto
+	jsonDataContacts, err := json.Marshal(personContacts)
+	if err != nil {
+		return nil, err
+	}
+	jsonDataPersons, err := json.Marshal(persons)
+	if err != nil {
+		return nil, err
+	}
+	jsonDataRoomPrices, err := json.Marshal(roomPrices)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonDataContact []map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonDataContacts), &jsonDataContact); err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	var jsonDataPerson []map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonDataPersons), &jsonDataPerson); err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	var jsonDataRoomPrice []map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonDataRoomPrices), &jsonDataRoomPrice); err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	// fmt.Println(jsonDataContact)
+	// fmt.Println(jsonDataPerson)
+
+	contactsByPersonID := make(map[float64][]map[string]interface{})
+
+	for _, contact := range jsonDataContact {
+		personID := contact["PersonID"].(float64) // Convert to float64
+		if _, ok := contactsByPersonID[personID]; !ok {
+			contactsByPersonID[personID] = []map[string]interface{}{}
+		}
+		contactsByPersonID[personID] = append(contactsByPersonID[personID], contact)
+	}
+
+	for _, person := range jsonDataPerson {
+		personID := person["ID"].(float64) // Convert to float64
+		if contactSlice, ok := contactsByPersonID[personID]; ok {
+			person["Contacts"] = contactSlice
+		}
+	}
+
+	roomsByFloorID := make(map[uint][]dto.RoomDto)
+	for _, room := range rooms {
+		subList := dto.RoomDto{
+			RoomID:       room.ID,
+			RoomNumber:   room.RoomNumber,
+			RoomSize:     room.SizeSQM,
+			RoomPrice:    "",
+			OwnerName:    "",
+			OwnerContact: "",
+			StatusOfRoom: room.StatusOfRoom,
+		}
+		for _, price := range jsonDataRoomPrice {
+			if price["UnitType"] == "SHOW" {
+				roomIDStr := strconv.FormatUint(uint64(room.ID), 10)                          // Convert room.ID to string
+				priceRoomIDStr := strconv.FormatFloat(price["RoomID"].(float64), 'f', -1, 64) // Convert price["RoomID"] to string
+				if roomIDStr == priceRoomIDStr {
+					subList.RoomPrice = strconv.FormatFloat(price["Amount"].(float64), 'f', -1, 64)
+					break
+				} else {
+					subList.RoomPrice = ""
+					break
+				}
+			}
+		}
+		for _, person := range jsonDataPerson {
+			if room.OwnerID != nil {
+				roomOwnerIDFloat := float64(*room.OwnerID)
+				if person["ID"] == roomOwnerIDFloat {
+					subList.OwnerName = person["FullName"].(string)
+					contacts, ok := person["Contacts"].([]map[string]interface{})
+					if ok {
+						for _, contact := range contacts {
+							contactType := contact["Type"].(string)
+							subList.OwnerContact = contactType
+							break
+						}
+						break
+					}
+				} else {
+					subList.OwnerName = ""
+					subList.OwnerContact = ""
+				}
+			}
+		}
+		roomsByFloorID[room.FloorID] = append(roomsByFloorID[room.FloorID], subList)
+	}
+
+	var result []dto.PlaceDto
 	for _, place := range places {
-		var buildingsDto []Dto.BuildingDto
+		var buildingsDto []dto.BuildingDto
 		for _, building := range buildings {
 			if building.PlaceID == place.ID {
-				var floorsDto []Dto.FloorDto
+				var floorsDto []dto.FloorDto
 				for _, floor := range floors {
-					fmt.Println(floor.BuildingID, building.ID)
 					if floor.BuildingID == building.ID {
-						// Include floors only if there are rooms associated with them
 						if roomsForFloor, ok := roomsByFloorID[floor.ID]; ok {
-							floorsDto = append(floorsDto, Dto.FloorDto{
+							floorsDto = append(floorsDto, dto.FloorDto{
 								FloorID:     floor.ID,
 								FloorNumber: floor.FloorNumber,
 								Rooms:       roomsForFloor,
 							})
 						} else {
-							floorsDto = append(floorsDto, Dto.FloorDto{
+							floorsDto = append(floorsDto, dto.FloorDto{
 								FloorID:     floor.ID,
 								FloorNumber: floor.FloorNumber,
 								Rooms:       nil,
@@ -72,15 +167,14 @@ func (service *RoomService) GetAllPlace() ([]Dto.PlaceDto, error) {
 						}
 					}
 				}
-				fmt.Println(floorsDto)
-				buildingsDto = append(buildingsDto, Dto.BuildingDto{
+				buildingsDto = append(buildingsDto, dto.BuildingDto{
 					BuildingID:   building.ID,
 					BuildingName: building.BuildingName,
 					Floors:       floorsDto,
 				})
 			}
 		}
-		result = append(result, Dto.PlaceDto{
+		result = append(result, dto.PlaceDto{
 			PlaceID:   place.ID,
 			PlaceName: place.PlaceName,
 			Buildings: buildingsDto,
@@ -112,7 +206,6 @@ func (service *RoomService) CreateBuilding(placeID uint, buildingName string) er
 		IsActive:     true,
 	}
 
-	fmt.Println(buildingModel)
 	_, err := service.roomRepo.CreateBuilding(buildingModel)
 
 	if err != nil {
@@ -151,14 +244,14 @@ func (service *RoomService) CreateRoom(floorID uint, roomName string) error {
 	return nil
 }
 
-func (service *RoomService) GetRoomByID(roomID uint) (*Dto.RoomResponseDto, error) {
+func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, error) {
 	room, err := service.roomRepo.GetRoomByID(roomID)
 	if err != nil {
 		return nil, err
 	}
 
 	// Convert to RoomResponse model
-	roomResponse := Dto.RoomResponseDto{
+	roomResponse := dto.RoomResponseDto{
 		ID:                 room.ID,
 		OwnerID:            room.OwnerID,
 		FloorID:            room.FloorID,
@@ -182,7 +275,7 @@ func (service *RoomService) GetRoomByID(roomID uint) (*Dto.RoomResponseDto, erro
 	return &roomResponse, nil
 }
 
-func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*Dto.RoomResponseDto, error) {
+func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models_Room.Room) (*dto.RoomResponseDto, error) {
 	existingRoom, err := service.roomRepo.GetRoomByID(roomID)
 	if err != nil {
 		return nil, err
@@ -210,7 +303,7 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models.Room) (*D
 	}
 
 	// Convert to RoomResponse model
-	modifiedRoomResponse := Dto.RoomResponseDto{
+	modifiedRoomResponse := dto.RoomResponseDto{
 		ID:                 modifiedRoom.ID,
 		OwnerID:            modifiedRoom.OwnerID,
 		FloorID:            modifiedRoom.FloorID,

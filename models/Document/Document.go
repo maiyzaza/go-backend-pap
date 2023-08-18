@@ -5,10 +5,10 @@ import (
 )
 
 type Document struct {
-	ID          uint       `gorm:"primaryKey"`
-	Type        string     `gorm:"type:varchar(255)"` //RENT PERSON, OWNER, AGENCY, BUYER, SELLER
-	DocumentUrl string     `gorm:"document_url"`
-	IsActive    bool       `gorm:"is_active"`
-	CreatedAt   time.Time  `gorm:"created_at"`
-	UpdatedAt   *time.Time `gorm:"updated_at"`
+	ID          uint       `json:"ID" gorm:"primaryKey"`
+	Type        string     `json:"Type" gorm:"type:varchar(255)"`
+	DocumentUrl string     `json:"DocumentUrl" gorm:"document_url"`
+	IsActive    bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt   time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt   *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 }

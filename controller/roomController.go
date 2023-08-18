@@ -5,7 +5,7 @@ import (
 	models "PattayaAvenueProperty/models/Room"
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
-	dto "PattayaAvenueProperty/service/dto"
+	"PattayaAvenueProperty/service/dto"
 	"net/http"
 	"strconv"
 

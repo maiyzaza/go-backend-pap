@@ -5,14 +5,14 @@ import (
 )
 
 type Employee struct {
-	ID        uint       `gorm:"primaryKey"`
-	PersonID  uint       `gorm:"person_id"`
-	RoleID    uint       `gorm:"role_id"`
-	Salary    float64    `gorm:"salary"`
-	IsActive  bool       `gorm:"is_active"`
-	CreatedAt time.Time  `gorm:"created_at"`
-	UpdatedAt *time.Time `gorm:"updated_at"`
+	ID        uint       `json:"ID" gorm:"primaryKey"`
+	PersonID  uint       `json:"PersonID" gorm:"person_id"`
+	RoleID    uint       `json:"RoleID" gorm:"role_id"`
+	Salary    float64    `json:"Salary" gorm:"salary"`
+	IsActive  bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Person Person `gorm:"foreignKey:PersonID"`
-	Role   Role   `gorm:"foreignKey:RoleID"`
+	Person Person `json:"Person" gorm:"foreignKey:PersonID"`
+	Role   Role   `json:"Role" gorm:"foreignKey:RoleID"`
 }

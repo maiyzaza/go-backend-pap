@@ -5,12 +5,12 @@ import (
 )
 
 type Floor struct {
-	ID          uint       `gorm:"primaryKey"`
-	BuildingID  uint       `gorm:"building_id"`
-	FloorNumber string     `gorm:"floor_number"`
-	IsActive    bool       `gorm:"is_active"`
-	CreatedAt   time.Time  `gorm:"created_at"`
-	UpdatedAt   *time.Time `gorm:"updated_at"`
+	ID          uint       `json:"ID" gorm:"primaryKey"`
+	BuildingID  uint       `json:"BuildingID" gorm:"building_id"`
+	FloorNumber string     `json:"FloorNumber" gorm:"floor_number"`
+	IsActive    bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt   time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt   *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Building Building `gorm:"foreignKey:building_id"`
+	Building Building `json:"Building" gorm:"foreignKey:building_id"`
 }

@@ -7,13 +7,13 @@ import (
 )
 
 type RoomContractDocument struct {
-	ID             uint       `gorm:"primaryKey"`
-	DocumentID     uint       `gorm:"document_id"`
-	RoomContractID uint       `gorm:"room_contråact_id"`
-	IsActive       bool       `gorm:"is_active"`
-	CreatedAt      time.Time  `gorm:"created_at"`
-	UpdatedAt      *time.Time `gorm:"updated_at"`
+	ID             uint       `json:"ID" gorm:"primaryKey"`
+	DocumentID     uint       `json:"DocumentID" gorm:"document_id"`
+	RoomContractID uint       `json:"RoomContractID" gorm:"room_contract_id"`
+	IsActive       bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt      time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt      *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Document     Document                     `gorm:"foreignKey:DocumentID"`
-	RoomContract models_Contract.RoomContract `gorm:"foreignKey:RoomContractID"`
+	Document     Document                     `json:"Document" gorm:"foreignKey:DocumentID"`
+	RoomContract models_Contract.RoomContract `json:"RoomContract" gorm:"foreignKey:RoomContractID"`
 }

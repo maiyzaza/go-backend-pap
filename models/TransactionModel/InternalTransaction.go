@@ -5,15 +5,15 @@ import (
 )
 
 type InternalTransaction struct {
-	ID          uint      `gorm:"primaryKey"`
-	Product     string    `gorm:"product"`
-	Description string    `gorm:"description"`
-	Quantity    int       `gorm:"quantity"`
-	Amount      float32   `gorm:"amount"`
-	Total       float32   `gorm:"total"`
-	Branch      string    `gorm:"branch"`     //Branch1, ...
-	IsReceive   bool      `gorm:"is_receive"` // didnot update database yet
-	IsActive    bool      `gorm:"is_active"`
-	CreatedAt   time.Time `gorm:"created_at"`
-	UpdatedAt   time.Time `gorm:"updated_at"`
+	ID          uint      `json:"id" gorm:"primaryKey"`
+	Product     string    `json:"product" gorm:"product"`
+	Description string    `json:"description" gorm:"description"`
+	Quantity    int       `json:"quantity" gorm:"quantity"`
+	Amount      float32   `json:"amount" gorm:"amount"`
+	Total       float32   `json:"total" gorm:"total"`
+	Branch      string    `json:"branch" gorm:"branch"`         //Branch1, ...
+	IsReceive   bool      `json:"is_receive" gorm:"is_receive"` // did not update database yet
+	IsActive    bool      `json:"is_active" gorm:"is_active"`
+	CreatedAt   time.Time `json:"created_at" gorm:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at" gorm:"updated_at"`
 }

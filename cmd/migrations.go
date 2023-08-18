@@ -15,8 +15,8 @@ import (
 func main() {
 	// config.LoadEnvVariables()
 
-	dataSourceName := "doadmin:AVNS_nnRbPmxqVlOi3mYo5LT@tcp(db-mysql-sgp1-88785-do-user-14398363-0.b.db.ondigitalocean.com:25060)/?charset=utf8mb4&parseTime=True&loc=Local"
-	// dataSourceName := "root:my-secret-pw@tcp(localhost:1433)/?charset=utf8mb4&parseTime=True&loc=Local"
+	// dataSourceName := "doadmin:AVNS_nnRbPmxqVlOi3mYo5LT@tcp(db-mysql-sgp1-88785-do-user-14398363-0.b.db.ondigitalocean.com:25060)/?charset=utf8mb4&parseTime=True&loc=Local"
+	dataSourceName := "root:my-secret-pw@tcp(localhost:1433)/?charset=utf8mb4&parseTime=True&loc=Local"
 	// dbREMOTE_DB_URL := os.Getenv("REMOTE_DB_URL")
 	// dataSourceName := dbREMOTE_DB_URL
 	fmt.Println("dataSourceName: ", dataSourceName)
@@ -27,13 +27,17 @@ func main() {
 	}
 
 	// Create the new "PattayaAvenueProperty" database
-	err = db.Exec("CREATE DATABASE IF NOT EXISTS PattayaAvenueProperty_Staging").Error
+	// err = db.Exec("CREATE DATABASE IF NOT EXISTS PattayaAvenueProperty_Staging").Error
+	// if err != nil {
+	// 	panic(err)
+	// }
+	err = db.Exec("CREATE DATABASE IF NOT EXISTS PattayaAvenueProperty").Error
 	if err != nil {
 		panic(err)
 	}
 
-	// dataSourceName1 := "root:my-secret-pw@tcp(localhost:1433)/PattayaAvenueProperty?charset=utf8mb4&parseTime=True&loc=Local"
-	dataSourceName1 := "doadmin:AVNS_nnRbPmxqVlOi3mYo5LT@tcp(db-mysql-sgp1-88785-do-user-14398363-0.b.db.ondigitalocean.com:25060)/PattayaAvenueProperty_Staging?charset=utf8mb4&parseTime=True&loc=Local"
+	dataSourceName1 := "root:my-secret-pw@tcp(localhost:1433)/PattayaAvenueProperty?charset=utf8mb4&parseTime=True&loc=Local"
+	// dataSourceName1 := "doadmin:AVNS_nnRbPmxqVlOi3mYo5LT@tcp(db-mysql-sgp1-88785-do-user-14398363-0.b.db.ondigitalocean.com:25060)/PattayaAvenueProperty_Staging?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db1, err := gorm.Open(mysql.Open(dataSourceName1), &gorm.Config{})
 	if err != nil {

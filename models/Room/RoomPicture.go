@@ -5,12 +5,12 @@ import (
 )
 
 type RoomPicture struct {
-	ID             int        `gorm:"primaryKey"`
-	RoomID         int        `gorm:"room_id"`
-	RoomPictureUrl string     `gorm:"room_picture_url"`
-	IsActive       bool       `gorm:"is_active"`
-	CreatedAt      time.Time  `gorm:"created_at"`
-	UpdatedAt      *time.Time `gorm:"updated_at"`
+	ID             int        `json:"ID" gorm:"primaryKey"`
+	RoomID         int        `json:"RoomID" gorm:"room_id"`
+	RoomPictureUrl string     `json:"RoomPictureUrl" gorm:"room_picture_url"`
+	IsActive       bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt      time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt      *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Room Room `gorm:"foreignKey:RoomID"`
+	Room Room `json:"Room" gorm:"foreignKey:RoomID"`
 }

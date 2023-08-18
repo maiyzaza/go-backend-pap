@@ -7,14 +7,14 @@ import (
 )
 
 type PersonContract struct {
-	ID             uint       `gorm:"primaryKey"`
-	PersonID       uint       `gorm:"person_id"`
-	RoomContractID uint       `gorm:"room_contract_id"`
-	Type           string     `gorm:"type:varchar(255)"` // buyer, seller, owner, salesperson
-	IsActive       bool       `gorm:"is_active"`
-	CreatedAt      time.Time  `gorm:"created_at"`
-	UpdatedAt      *time.Time `gorm:"updated_at"`
+	ID             uint       `json:"ID" gorm:"primaryKey"`
+	PersonID       uint       `json:"PersonID" gorm:"person_id"`
+	RoomContractID uint       `json:"RoomContractID" gorm:"room_contract_id"`
+	Type           string     `json:"Type" gorm:"type:varchar(255)"` // buyer, seller, owner, salesperson
+	IsActive       bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt      time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt      *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Person       models_Person.Person `gorm:"foreignKey:PersonID"`
-	RoomContract RoomContract         `gorm:"foreignKey:RoomContractID"`
+	Person       models_Person.Person `json:"Person" gorm:"foreignKey:PersonID"`
+	RoomContract RoomContract         `json:"RoomContract" gorm:"foreignKey:RoomContractID"`
 }

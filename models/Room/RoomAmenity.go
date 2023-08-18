@@ -5,14 +5,14 @@ import (
 )
 
 type RoomAmenity struct {
-	ID          int        `gorm:"primaryKey"`
-	RoomID      int        `gorm:"room_id"`
-	AmenityID   int        `gorm:"amenity_id"`
-	Description string     `gorm:"description"`
-	IsActive    bool       `gorm:"is_active"`
-	CreatedAt   time.Time  `gorm:"created_at"`
-	UpdatedAt   *time.Time `gorm:"updated_at"`
+	ID          int        `json:"ID" gorm:"primaryKey"`
+	RoomID      int        `json:"RoomID" gorm:"room_id"`
+	AmenityID   int        `json:"AmenityID" gorm:"amenity_id"`
+	Description string     `json:"Description" gorm:"description"`
+	IsActive    bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt   time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt   *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Room    Room    `gorm:"foreignKey:RoomID"`
-	Amenity Amenity `gorm:"foreignKey:AmenityID"`
+	Room    Room    `json:"Room" gorm:"foreignKey:RoomID"`
+	Amenity Amenity `json:"Amenity" gorm:"foreignKey:AmenityID"`
 }

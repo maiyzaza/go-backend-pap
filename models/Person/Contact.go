@@ -5,13 +5,13 @@ import (
 )
 
 type Contact struct {
-	ID        uint       `gorm:"primaryKey"`
-	Type      string     `gorm:"type:varchar(255)"` // line, facebook, email, phone, passport picture, citizen picture
-	Value     string     `gorm:"value"`
-	PersonID  uint       `gorm:"person_id"`
-	IsActive  bool       `gorm:"is_active"`
-	CreatedAt time.Time  `gorm:"created_at"`
-	UpdatedAt *time.Time `gorm:"updated_at"`
+	ID        uint       `json:"ID" gorm:"primaryKey"`
+	Type      string     `json:"Type" gorm:"type:varchar(255)"`
+	Value     string     `json:"Value" gorm:"value"`
+	PersonID  uint       `json:"PersonID" gorm:"person_id"`
+	IsActive  bool       `json:"IsActive" gorm:"is_active"`
+	CreatedAt time.Time  `json:"CreatedAt" gorm:"created_at"`
+	UpdatedAt *time.Time `json:"UpdatedAt" gorm:"updated_at"`
 
-	Person Person `gorm:"foreignKey:PersonID"`
+	Person Person `json:"Person" gorm:"foreignKey:PersonID"`
 }
