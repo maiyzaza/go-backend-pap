@@ -107,7 +107,7 @@ func (controller *RoomController) CreateRoom(c *gin.Context) {
 		return
 	}
 
-	err := controller.roomService.CreateRoom(body.FloorID, body.RoomName)
+	err := controller.roomService.CreateRoom(body.FloorID, body.RoomNumber)
 	if err != nil {
 		c.Error(err)
 		return

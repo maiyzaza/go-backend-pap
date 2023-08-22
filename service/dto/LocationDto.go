@@ -39,6 +39,6 @@ type RoomDto struct {
 }
 
 type CreateRoomDto struct {
-	FloorID  uint   `json:"floor_id"`
-	RoomName string `json:"room_name"`
+	FloorID    uint   `json:"floor_id"`
+	RoomNumber string `json:"room_number"`
 }
