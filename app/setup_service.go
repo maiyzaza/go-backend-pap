@@ -17,5 +17,6 @@ func (s *SetupService) Setup() {
 	)
 	s.RoomService = service.NewRoomService(
 		s.Repository.RoomRepo,
+		s.Repository.PersonRepo,
 	)
 }

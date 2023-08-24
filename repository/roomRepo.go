@@ -5,6 +5,8 @@ import (
 	models_Person "PattayaAvenueProperty/models/Person"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"fmt"
+
+	"gorm.io/gorm"
 )
 
 type RoomRepo struct{}
@@ -13,12 +15,16 @@ func NewRoomRepo() RoomRepo {
 	return RoomRepo{}
 }
 
+func ActiveOnlyRoom(db *gorm.DB) *gorm.DB {
+	return db.Where("is_active = ?", 1)
+}
+
 // Get all places, buildings, floors, rooms
 func (repo RoomRepo) GetAllPlace() ([]models_Room.Place, error) {
 	var model []models_Room.Place
-	err := db.DB.Find(&model).Error
+	err := ActiveOnlyRoom(db.DB).Find(&model).Error
 	if err != nil {
-		fmt.Println("Error finding records:", err)
+		fmt.Println("Error finding active records:", err)
 		return nil, err
 	}
 	return model, nil
@@ -26,7 +32,7 @@ func (repo RoomRepo) GetAllPlace() ([]models_Room.Place, error) {
 
 func (repo RoomRepo) GetAllBuilding() ([]models_Room.Building, error) {
 	var model []models_Room.Building
-	err := db.DB.Find(&model).Error
+	err := ActiveOnlyRoom(db.DB).Find(&model).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -36,7 +42,7 @@ func (repo RoomRepo) GetAllBuilding() ([]models_Room.Building, error) {
 
 func (repo RoomRepo) GetAllFloor() ([]models_Room.Floor, error) {
 	var model []models_Room.Floor
-	err := db.DB.Find(&model).Error
+	err := ActiveOnlyRoom(db.DB).Find(&model).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -46,7 +52,7 @@ func (repo RoomRepo) GetAllFloor() ([]models_Room.Floor, error) {
 
 func (repo RoomRepo) GetAllRoom() ([]models_Room.Room, error) {
 	var model []models_Room.Room
-	err := db.DB.Find(&model).Error
+	err := ActiveOnlyRoom(db.DB).Find(&model).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -96,28 +102,38 @@ func (repo RoomRepo) ModifyRoom(room models_Room.Room) (*models_Room.Room, error
 }
 
 func (repo RoomRepo) GetRoomByID(roomID uint) (*models_Room.Room, error) {
-	var room models_Room.Room
-	err := db.DB.First(&room, roomID).Error
+	var models models_Room.Room
+	err := ActiveOnlyRoom(db.DB).First(&models, roomID).Error
 	if err != nil {
 		fmt.Println("Error finding room:", err)
 		return nil, err
 	}
-	return &room, nil
+	return &models, nil
 }
 
 func (repo RoomRepo) GetAllRoomPrices() ([]models_Room.RoomPrice, error) {
-	var prices []models_Room.RoomPrice
-	err := db.DB.Find(&prices).Error
+	var models []models_Room.RoomPrice
+	err := ActiveOnlyRoom(db.DB).Find(&models).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
 	}
-	return prices, nil
+	return models, nil
+}
+
+func (repo RoomRepo) GetAllRoomPictures() ([]models_Room.RoomPicture, error) {
+	var models []models_Room.RoomPicture
+	err := ActiveOnlyRoom(db.DB).Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return models, nil
 }
 
 func (repo RoomRepo) GetAllPersons() ([]models_Person.Person, error) {
 	var models []models_Person.Person
-	err := db.DB.Find(&models).Error
+	err := ActiveOnlyRoom(db.DB).Find(&models).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
@@ -127,9 +143,29 @@ func (repo RoomRepo) GetAllPersons() ([]models_Person.Person, error) {
 
 func (repo RoomRepo) GetAllContacts() ([]models_Person.Contact, error) {
 	var models []models_Person.Contact
-	err := db.DB.Find(&models).Error
+	err := ActiveOnlyRoom(db.DB).Find(&models).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return models, nil
+}
+
+func (repo RoomRepo) GetRoomPriceByRoomID(roomID uint) ([]models_Room.RoomPrice, error) {
+	var models []models_Room.RoomPrice
+	err := ActiveOnlyRoom(db.DB).Where("room_id = ?", roomID).Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding room price:", err)
+		return nil, err
+	}
+	return models, nil
+}
+
+func (repo RoomRepo) GetRoomPictureByRoomID(roomID uint) ([]models_Room.RoomPicture, error) {
+	var models []models_Room.RoomPicture
+	err := ActiveOnlyRoom(db.DB).Where("room_id = ?", roomID).Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding room picture:", err)
 		return nil, err
 	}
 	return models, nil

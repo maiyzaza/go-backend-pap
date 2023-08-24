@@ -10,13 +10,41 @@ import (
 )
 
 type RoomService struct {
-	roomRepo repository.RoomRepo
+	roomRepo   repository.RoomRepo
+	personRepo repository.PersonRepo
 }
 
-func NewRoomService(roomRepo repository.RoomRepo) RoomService {
+func NewRoomService(roomRepo repository.RoomRepo, personRepo repository.PersonRepo) RoomService {
 	return RoomService{
-		roomRepo: roomRepo,
+		roomRepo:   roomRepo,
+		personRepo: personRepo,
 	}
+}
+
+// Helper function to convert interface{} to *string
+func getStringPtr(value interface{}) *string {
+	if str, ok := value.(string); ok {
+		return &str
+	}
+	return nil
+}
+
+// Helper function to convert interface{} to *int32
+func getInt32Ptr(value interface{}) *int32 {
+	if intValue, ok := value.(float64); ok {
+		intValue32 := int32(intValue)
+		return &intValue32
+	}
+	return nil
+}
+
+// Helper function to convert interface{} to *float32
+func getFloat32Ptr(value interface{}) *float32 {
+	if floatValue, ok := value.(float64); ok {
+		floatValue32 := float32(floatValue)
+		return &floatValue32
+	}
+	return nil
 }
 
 func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
@@ -249,11 +277,78 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	if err != nil {
 		return nil, err
 	}
+	price, err := service.roomRepo.GetRoomPriceByRoomID(roomID)
+	if err != nil {
+		return nil, err
+	}
+	picture, err := service.roomRepo.GetRoomPictureByRoomID(roomID)
+	if err != nil {
+		return nil, err
+	}
+	person, err := service.personRepo.FindPersonById(*room.OwnerID)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonDataPerson, err := json.Marshal(person)
+	if err != nil {
+		return nil, err
+	}
+	jsonDataRoomPrices, err := json.Marshal(price)
+	if err != nil {
+		return nil, err
+	}
+	jsonDataRoomPictures, err := json.Marshal(picture)
+	if err != nil {
+		return nil, err
+	}
+
+	var jsonDataPersons map[string]interface{}
+	if err := json.Unmarshal(jsonDataPerson, &jsonDataPersons); err != nil {
+		fmt.Println("Error:", err)
+	}
+	var jsonDataRoomPicture []map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonDataRoomPictures), &jsonDataRoomPicture); err != nil {
+		fmt.Println("Error:", err)
+	}
+	var jsonDataRoomPrice []map[string]interface{}
+	if err := json.Unmarshal([]byte(jsonDataRoomPrices), &jsonDataRoomPrice); err != nil {
+		fmt.Println("Error:", err)
+	}
+	fmt.Println(jsonDataPersons)
+
+	// Convert to RoomPictureResponse model
+	var roomPictures []dto.RoomPictureResponseDto
+	for _, picture := range jsonDataRoomPicture {
+		roomPicture := dto.RoomPictureResponseDto{
+			ID:             uint(picture["ID"].(float64)), // Type assertion to float64
+			RoomPictureUrl: picture["RoomPictureUrl"].(string),
+		}
+		roomPictures = append(roomPictures, roomPicture)
+	}
+
+	// Convert to RoomPriceResponse model
+	var roomPrices []dto.RoomPriceResponseDto
+	for _, price := range jsonDataRoomPrice {
+		roomPrice := dto.RoomPriceResponseDto{
+			ID:              uint(price["ID"].(float64)), // Type assertion to float64
+			Amount:          float32(price["Amount"].(float64)),
+			UnitType:        getStringPtr(price["UnitType"]),
+			MinDuration:     getInt32Ptr(price["MinDuration"]),
+			MaxDuration:     getInt32Ptr(price["MaxDuration"]),
+			Type:            price["Type"].(string),
+			DepositAmount:   getFloat32Ptr(price["DepositAmount"]),
+			DepositUnitType: getStringPtr(price["DepositUnitType"]),
+		}
+		roomPrices = append(roomPrices, roomPrice)
+	}
 
 	// Convert to RoomResponse model
+	ownerName := jsonDataPersons["FullName"].(string)
 	roomResponse := dto.RoomResponseDto{
 		ID:                 room.ID,
 		OwnerID:            room.OwnerID,
+		OwnerName:          nil,
 		FloorID:            room.FloorID,
 		RoomName:           room.RoomName,
 		RoomNumber:         room.RoomNumber,
@@ -267,10 +362,10 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		TypeOfView:         room.TypeOfView,
 		Remark:             room.Remark,
 		StatusOfRoom:       room.StatusOfRoom,
-		IsActive:           room.IsActive,
-		CreatedAt:          room.CreatedAt.String(),
-		UpdatedAt:          room.UpdatedAt.String(),
+		RoomPrices:         roomPrices,
+		RoomPictures:       roomPictures,
 	}
+	roomResponse.OwnerName = &ownerName
 
 	return &roomResponse, nil
 }
@@ -319,9 +414,6 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models_Room.Room
 		TypeOfView:         modifiedRoom.TypeOfView,
 		Remark:             modifiedRoom.Remark,
 		StatusOfRoom:       modifiedRoom.StatusOfRoom,
-		IsActive:           modifiedRoom.IsActive,
-		CreatedAt:          modifiedRoom.CreatedAt.String(),
-		UpdatedAt:          modifiedRoom.UpdatedAt.String(),
 	}
 
 	return &modifiedRoomResponse, nil
