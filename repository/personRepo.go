@@ -41,3 +41,13 @@ func (repo PersonRepo) FindPersonById(personID uint) (*models_Person.Person, err
 	}
 	return &model, nil
 }
+
+func (repo PersonRepo) GetAllContact() ([]models_Person.Contact, error) {
+	var model []models_Person.Contact
+	err := ActiveOnlyPerson(db.DB).Find(&models_Person.Contact{}).Find(&model).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return model, nil
+}

@@ -5,9 +5,10 @@ import (
 )
 
 type SetupService struct {
-	Repository    SetupRepository
-	PersonService service.PersonService
-	RoomService   service.RoomService
+	Repository      SetupRepository
+	PersonService   service.PersonService
+	RoomService     service.RoomService
+	ContractService service.ContractService
 }
 
 func (s *SetupService) Setup() {
@@ -18,5 +19,10 @@ func (s *SetupService) Setup() {
 	s.RoomService = service.NewRoomService(
 		s.Repository.RoomRepo,
 		s.Repository.PersonRepo,
+	)
+	s.ContractService = service.NewContractService(
+		s.Repository.ContractRepo,
+		s.Repository.PersonRepo,
+		s.Repository.RoomRepo,
 	)
 }

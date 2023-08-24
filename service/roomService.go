@@ -315,7 +315,6 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	if err := json.Unmarshal([]byte(jsonDataRoomPrices), &jsonDataRoomPrice); err != nil {
 		fmt.Println("Error:", err)
 	}
-	fmt.Println(jsonDataPersons)
 
 	// Convert to RoomPictureResponse model
 	var roomPictures []dto.RoomPictureResponseDto

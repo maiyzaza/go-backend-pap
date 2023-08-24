@@ -5,9 +5,10 @@ import (
 )
 
 type SetupController struct {
-	Service          SetupService
-	PersonController controller.PersonController
-	RoomController   controller.RoomController
+	Service            SetupService
+	PersonController   controller.PersonController
+	RoomController     controller.RoomController
+	ContractController controller.ContractController
 }
 
 func (s *SetupController) Setup() {
@@ -16,5 +17,8 @@ func (s *SetupController) Setup() {
 	)
 	s.RoomController = controller.NewRoomController(
 		s.Service.RoomService,
+	)
+	s.ContractController = controller.NewContractController(
+		s.Service.ContractService,
 	)
 }

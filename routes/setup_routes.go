@@ -18,6 +18,10 @@ func SetUpRoutes(router *gin.RouterGroup, ctrl *app.SetupController) (*gin.Route
 		{
 			setupRoomRoutes(roomRoute, ctrl.RoomController)
 		}
+		contractRoute := route.Group("contracts")
+		{
+			setupContractRoutes(contractRoute, ctrl.ContractController)
+		}
 	}
 	return route, nil
 }
