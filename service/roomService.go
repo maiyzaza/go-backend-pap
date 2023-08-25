@@ -1,6 +1,7 @@
 package service
 
 import (
+	models_Document "PattayaAvenueProperty/models/Document"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"PattayaAvenueProperty/repository"
 	dto "PattayaAvenueProperty/service/dto"
@@ -283,6 +284,10 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	if err != nil {
 		return nil, err
 	}
+	roomDocument, err := service.roomRepo.GetRoomDocumentByRoomID(roomID)
+	if err != nil {
+		return nil, err
+	}
 
 	jsonDataPerson, err := json.Marshal(person)
 	if err != nil {
@@ -336,6 +341,16 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		roomPrices = append(roomPrices, roomPrice)
 	}
 
+	// Convert to RoomDocumentResponse model
+	var roomDocuments []dto.RoomDocumentResponseDto
+	for _, document := range roomDocument {
+		roomDocument := dto.RoomDocumentResponseDto{
+			ID:           document.ID,
+			RoomDocument: document.DocumentUrl,
+		}
+		roomDocuments = append(roomDocuments, roomDocument)
+	}
+
 	// Convert to RoomResponse model
 	ownerName := jsonDataPersons["FullName"].(string)
 	roomResponse := dto.RoomResponseDto{
@@ -357,6 +372,7 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		StatusOfRoom:       room.StatusOfRoom,
 		RoomPrices:         roomPrices,
 		RoomPictures:       roomPictures,
+		RoomDocuments:      roomDocuments,
 	}
 	roomResponse.OwnerName = &ownerName
 
@@ -499,6 +515,30 @@ func (service *RoomService) CreateRoomPicture(roomPictureData dto.TakeRoomPictur
 
 func (service *RoomService) DeleteRoomPicture(roomPictureID uint) error {
 	err := service.roomRepo.DeleteRoomPicture(roomPictureID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// create RoomDocument and delete RoomDocument by change is_active to 0
+func (service *RoomService) CreateRoomDocument(roomDocumentPictureData dto.TakeRoomPictureDataDto) error {
+	roomDocumentPictureModel := models_Document.RoomDocument{
+		RoomID:      roomDocumentPictureData.RoomID,
+		DocumentUrl: roomDocumentPictureData.RoomPictureUrl,
+		IsActive:    true,
+	}
+
+	_, err := service.roomRepo.CreateRoomDocument(roomDocumentPictureModel)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *RoomService) DeleteRoomDocument(roomDocumentPictureID uint) error {
+	err := service.roomRepo.DeleteRoomDocument(roomDocumentPictureID)
 	if err != nil {
 		return err
 	}

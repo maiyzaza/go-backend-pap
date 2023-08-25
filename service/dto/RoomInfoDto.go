@@ -17,24 +17,25 @@ type EditRoomInfoDto struct {
 }
 
 type RoomResponseDto struct {
-	ID                 uint                     `json:"id"`
-	OwnerID            *uint                    `json:"owner_id"`
-	OwnerName          *string                  `json:"owner_name"`
-	FloorID            uint                     `json:"floor_id"`
-	RoomName           *string                  `json:"room_name"`
-	RoomNumber         string                   `json:"room_number"`
-	RoomAddress        string                   `json:"room_address"`
-	ElectricNumber     *string                  `json:"electric_number"`
-	ElectricUserNumber *string                  `json:"electric_user_number"`
-	AmountOfBedRoom    *int32                   `json:"amount_of_bed_room"`
-	AmountOfToiletRoom *int32                   `json:"amount_of_toilet_room"`
-	AmountOfLivingRoom *int32                   `json:"amount_of_living_room"`
-	SizeSQM            float32                  `json:"size_sqm"`
-	TypeOfView         string                   `json:"type_of_view"`
-	Remark             *string                  `json:"remark"`
-	StatusOfRoom       string                   `json:"status_of_room"`
-	RoomPrices         []RoomPriceResponseDto   `json:"room_prices"`
-	RoomPictures       []RoomPictureResponseDto `json:"room_pictures"`
+	ID                 uint                      `json:"id"`
+	OwnerID            *uint                     `json:"owner_id"`
+	OwnerName          *string                   `json:"owner_name"`
+	FloorID            uint                      `json:"floor_id"`
+	RoomName           *string                   `json:"room_name"`
+	RoomNumber         string                    `json:"room_number"`
+	RoomAddress        string                    `json:"room_address"`
+	ElectricNumber     *string                   `json:"electric_number"`
+	ElectricUserNumber *string                   `json:"electric_user_number"`
+	AmountOfBedRoom    *int32                    `json:"amount_of_bed_room"`
+	AmountOfToiletRoom *int32                    `json:"amount_of_toilet_room"`
+	AmountOfLivingRoom *int32                    `json:"amount_of_living_room"`
+	SizeSQM            float32                   `json:"size_sqm"`
+	TypeOfView         string                    `json:"type_of_view"`
+	Remark             *string                   `json:"remark"`
+	StatusOfRoom       string                    `json:"status_of_room"`
+	RoomPrices         []RoomPriceResponseDto    `json:"room_prices"`
+	RoomPictures       []RoomPictureResponseDto  `json:"room_pictures"`
+	RoomDocuments      []RoomDocumentResponseDto `json:"room_documents"`
 }
 
 type RoomPriceResponseDto struct {
@@ -53,6 +54,11 @@ type RoomPictureResponseDto struct {
 	RoomPictureUrl string `json:"room_picture_url"`
 }
 
+type RoomDocumentResponseDto struct {
+	ID           uint   `json:"id"`
+	RoomDocument string `json:"room_document"`
+}
+
 type TakeRoomPriceDataDto struct {
 	RoomID          uint     `json:"room_id"`
 	Amount          float32  `json:"amount"`
@@ -67,4 +73,9 @@ type TakeRoomPriceDataDto struct {
 type TakeRoomPictureDataDto struct {
 	RoomID         uint   `json:"room_id"`
 	RoomPictureUrl string `json:"room_picture_url"`
+}
+
+type TakeRoomDocumentDataDto struct {
+	RoomID       uint   `json:"room_id"`
+	RoomDocument string `json:"room_document"`
 }

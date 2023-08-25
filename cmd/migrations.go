@@ -67,5 +67,6 @@ func main() {
 		&models_Transaction.InternalTransaction{},
 		&models_Transaction.InternalTransactionDocument{},
 		&models_Transaction.Transaction{},
+		&models_Document.RoomDocument{},
 	)
 }

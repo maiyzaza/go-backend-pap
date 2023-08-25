@@ -20,5 +20,7 @@ func setupRoomRoutes(r *gin.RouterGroup, roomController controller.RoomControlle
 	r.POST("/editroomprice/:roomPriceID", roomController.DeleteRoomPrice)
 	r.POST("/roompicture", roomController.CreateRoomPicture)
 	r.POST("/editroompicture/:roomPictureID", roomController.DeleteRoomPicture)
+	r.POST("/roomdocument", roomController.CreateRoomDocument)
+	r.POST("/editroomdocument/:roomDocumentID", roomController.DeleteRoomDocument)
 
 }

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"PattayaAvenueProperty/db"
+	models_Document "PattayaAvenueProperty/models/Document"
 	models_Person "PattayaAvenueProperty/models/Person"
 	models_Room "PattayaAvenueProperty/models/Room"
 	"fmt"
@@ -151,6 +152,26 @@ func (repo RoomRepo) GetAllContacts() ([]models_Person.Contact, error) {
 	return models, nil
 }
 
+func (repo RoomRepo) GetAllRoomDocuments() ([]models_Document.RoomDocument, error) {
+	var models []models_Document.RoomDocument
+	err := ActiveOnlyRoom(db.DB).Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return models, nil
+}
+
+func (repo RoomRepo) GetRoomDocumentByRoomID(roomID uint) ([]models_Document.RoomDocument, error) {
+	var models []models_Document.RoomDocument
+	err := ActiveOnlyRoom(db.DB).Where("room_id = ?", roomID).Find(&models).Error
+	if err != nil {
+		fmt.Println("Error finding room document:", err)
+		return nil, err
+	}
+	return models, nil
+}
+
 func (repo RoomRepo) GetRoomPriceByRoomID(roomID uint) ([]models_Room.RoomPrice, error) {
 	var models []models_Room.RoomPrice
 	err := ActiveOnlyRoom(db.DB).Where("room_id = ?", roomID).Find(&models).Error
@@ -236,6 +257,23 @@ func (repo RoomRepo) CreateRoomPicture(roomPicture models_Room.RoomPicture) (*mo
 
 func (repo RoomRepo) DeleteRoomPicture(roomPictureID uint) error {
 	err := db.DB.Model(&models_Room.RoomPicture{}).Where("id = ?", roomPictureID).Update("is_active", 0).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// create RoomDocument and delete RoomDocument by change is_active to 0
+func (repo RoomRepo) CreateRoomDocument(roomDocumentPicture models_Document.RoomDocument) (*models_Document.RoomDocument, error) {
+	err := db.DB.Create(&roomDocumentPicture).Error
+	if err != nil {
+		return nil, err
+	}
+	return &roomDocumentPicture, nil
+}
+
+func (repo RoomRepo) DeleteRoomDocument(roomDocumentPictureID uint) error {
+	err := db.DB.Model(&models_Document.RoomDocument{}).Where("id = ?", roomDocumentPictureID).Update("is_active", 0).Error
 	if err != nil {
 		return err
 	}
