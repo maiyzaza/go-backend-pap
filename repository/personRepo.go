@@ -34,7 +34,7 @@ func (repo PersonRepo) FindAll() ([]models_Person.Person, error) {
 
 func (repo PersonRepo) FindPersonById(personID uint) (*models_Person.Person, error) {
 	var model models_Person.Person
-	err := ActiveOnlyPerson(db.DB).Find(&models_Person.Person{}).Preload("BankAccounts").First(&model).Error
+	err := ActiveOnlyPerson(db.DB).Where("id = ?", personID).Find(&models_Person.Person{}).Preload("BankAccounts").First(&model).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
