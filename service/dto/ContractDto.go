@@ -21,7 +21,7 @@ type ContractByIDResponseDto struct {
 	Deposit           float32 `json:"Deposit"`
 	TenantName        string  `json:"TenantName"`
 	ContactType       string  `json:"ContactType"`
-	ContractStatus    bool    `json:"ContractStatus"`
+	ContractStatus    string  `json:"ContractStatus"`
 }
 
 type ContractDetailDto struct {

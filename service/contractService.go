@@ -109,6 +109,13 @@ func (service *ContractService) GetContractByRoomID(roomID uint) ([]dto.Contract
 			}
 		}
 
+		var contractStatus string
+		if !contract.IsClosed {
+			contractStatus = "active"
+		} else {
+			contractStatus = "inactive"
+		}
+
 		result = append(result, dto.ContractByIDResponseDto{
 			ID:                contract.ID,
 			RoomID:            contract.RoomID,
@@ -118,7 +125,7 @@ func (service *ContractService) GetContractByRoomID(roomID uint) ([]dto.Contract
 			Deposit:           contract.Deposit,
 			TenantName:        tenantName,
 			ContactType:       contactType,
-			ContractStatus:    contract.IsClosed,
+			ContractStatus:    contractStatus,
 		})
 	}
 	return result, nil
@@ -158,7 +165,6 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 			}
 		}
 	}
-	// fmt.Println(roomContract.Rental)
 	var RoomNumber string
 	var RoomAddress string
 	for _, room := range rooms {
