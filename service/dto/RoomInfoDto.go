@@ -63,3 +63,8 @@ type TakeRoomPriceDataDto struct {
 	DepositUnitType *string  `json:"deposit_unit_type"`
 	DepositAmount   *float32 `json:"deposit_amount"`
 }
+
+type TakeRoomPictureDataDto struct {
+	RoomID         uint   `json:"room_id"`
+	RoomPictureUrl string `json:"room_picture_url"`
+}

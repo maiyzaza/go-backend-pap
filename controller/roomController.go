@@ -289,3 +289,48 @@ func (controller *RoomController) DeleteRoomPrice(c *gin.Context) {
 		Data:       nil,
 	})
 }
+
+// create RoomPicture and delete RoomPicture by change is_active to 0
+func (controller *RoomController) CreateRoomPicture(c *gin.Context) {
+	var body dto.TakeRoomPictureDataDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+	err := controller.roomService.CreateRoomPicture(body)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+func (controller *RoomController) DeleteRoomPicture(c *gin.Context) {
+	roomPictureID := c.Param("roomPictureID")
+	// Convert roomPictureID to uint
+	roomPictureIDUint, err := strconv.ParseUint(roomPictureID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid roomPicture ID",
+		})
+		return
+	}
+
+	err = controller.roomService.DeleteRoomPicture(uint(roomPictureIDUint))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}

@@ -224,3 +224,20 @@ func (repo RoomRepo) DeleteRoomPrice(roomPriceID uint) error {
 	}
 	return nil
 }
+
+// create RoomPicture and delete RoomPicture by change is_active to 0
+func (repo RoomRepo) CreateRoomPicture(roomPicture models_Room.RoomPicture) (*models_Room.RoomPicture, error) {
+	err := db.DB.Create(&roomPicture).Error
+	if err != nil {
+		return nil, err
+	}
+	return &roomPicture, nil
+}
+
+func (repo RoomRepo) DeleteRoomPicture(roomPictureID uint) error {
+	err := db.DB.Model(&models_Room.RoomPicture{}).Where("id = ?", roomPictureID).Update("is_active", 0).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
