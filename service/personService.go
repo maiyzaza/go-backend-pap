@@ -24,21 +24,25 @@ func (service *PersonService) GetProfiles() ([]dto.PersonDto, error) {
 	var result []dto.PersonDto
 	for _, person := range persons {
 		result = append(result, dto.PersonDto{
-			ID:                  person.ID,
-			FullName:            person.FullName,
-			CitizenDocumentUrl:  person.CitizenDocumentUrl,
-			PassportDocumentUrl: person.PassportDocumentUrl,
+			ID:             person.ID,
+			FullName:       person.FullName,
+			IdentityNumber: person.IdentityNumber,
 		})
 	}
 	return result, nil
 }
 
-func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDto, error) {
+func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDetailDto, error) {
 	persons, err := service.personRepo.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	var result []dto.PersonDto
+	contacts, err := service.personRepo.GetAllContact()
+	if err != nil {
+		return nil, err
+	}
+
+	var result []dto.PersonDetailDto
 	for _, person := range persons {
 		var bank []dto.BankAccountDto
 		for _, bankAccount := range person.BankAccounts {
@@ -49,12 +53,21 @@ func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDto, err
 				AccountName:   bankAccount.AccountName,
 			})
 		}
-		result = append(result, dto.PersonDto{
-			ID:                  person.ID,
-			FullName:            person.FullName,
-			CitizenDocumentUrl:  person.CitizenDocumentUrl,
-			PassportDocumentUrl: person.PassportDocumentUrl,
-			BankAccounts:        bank,
+		var contactList []dto.ContactDto
+		for _, contact := range contacts {
+			if person.ID == contact.PersonID {
+				contactList = append(contactList, dto.ContactDto{
+					ID:    contact.ID,
+					Type:  contact.Type,
+					Value: contact.Value,
+				})
+			}
+		}
+		result = append(result, dto.PersonDetailDto{
+			ID:           person.ID,
+			FullName:     person.FullName,
+			Contacts:     contactList,
+			BankAccounts: bank,
 		})
 	}
 	return result, nil
