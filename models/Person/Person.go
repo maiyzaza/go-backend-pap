@@ -7,6 +7,7 @@ import (
 type Person struct {
 	ID                  uint          `json:"ID" gorm:"primaryKey"`
 	FullName            string        `json:"FullName" gorm:"full_name"`
+	IdentityNumber      string        `json:"IdentityNumber" gorm:"identity_number"`
 	CitizenDocumentUrl  *string       `json:"CitizenDocumentUrl" gorm:"citizen_doucument_url"`
 	PassportDocumentUrl *string       `json:"PassportDocumentUrl" gorm:"passport_document_url"`
 	IsActive            bool          `json:"IsActive" gorm:"is_active"`

@@ -105,9 +105,6 @@ func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 		fmt.Println("Error:", err)
 	}
 
-	// fmt.Println(jsonDataContact)
-	// fmt.Println(jsonDataPerson)
-
 	contactsByPersonID := make(map[float64][]map[string]interface{})
 
 	for _, contact := range jsonDataContact {
@@ -127,6 +124,7 @@ func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 
 	roomsByFloorID := make(map[uint][]dto.RoomDto)
 	for _, room := range rooms {
+		fmt.Println("First Loop")
 		subList := dto.RoomDto{
 			RoomID:       room.ID,
 			RoomNumber:   room.RoomNumber,
@@ -142,9 +140,6 @@ func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 				priceRoomIDStr := strconv.FormatFloat(price["RoomID"].(float64), 'f', -1, 64) // Convert price["RoomID"] to string
 				if roomIDStr == priceRoomIDStr {
 					subList.RoomPrice = strconv.FormatFloat(price["Amount"].(float64), 'f', -1, 64)
-					break
-				} else {
-					subList.RoomPrice = ""
 					break
 				}
 			}
