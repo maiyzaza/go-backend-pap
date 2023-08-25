@@ -5,9 +5,9 @@ import (
 )
 
 type RoomAmenity struct {
-	ID          int        `json:"ID" gorm:"primaryKey"`
-	RoomID      int        `json:"RoomID" gorm:"room_id"`
-	AmenityID   int        `json:"AmenityID" gorm:"amenity_id"`
+	ID          uint       `json:"ID" gorm:"primaryKey"`
+	RoomID      uint       `json:"RoomID" gorm:"room_id"`
+	AmenityID   uint       `json:"AmenityID" gorm:"amenity_id"`
 	Description string     `json:"Description" gorm:"description"`
 	IsActive    bool       `json:"IsActive" gorm:"is_active"`
 	CreatedAt   time.Time  `json:"CreatedAt" gorm:"created_at"`

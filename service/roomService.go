@@ -124,7 +124,6 @@ func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 
 	roomsByFloorID := make(map[uint][]dto.RoomDto)
 	for _, room := range rooms {
-		fmt.Println("First Loop")
 		subList := dto.RoomDto{
 			RoomID:       room.ID,
 			RoomNumber:   room.RoomNumber,
@@ -135,7 +134,7 @@ func (service *RoomService) GetAllPlace() ([]dto.PlaceDto, error) {
 			StatusOfRoom: room.StatusOfRoom,
 		}
 		for _, price := range jsonDataRoomPrice {
-			if price["UnitType"] == "SHOW" {
+			if price["Type"] == "SHOW" {
 				roomIDStr := strconv.FormatUint(uint64(room.ID), 10)                          // Convert room.ID to string
 				priceRoomIDStr := strconv.FormatFloat(price["RoomID"].(float64), 'f', -1, 64) // Convert price["RoomID"] to string
 				if roomIDStr == priceRoomIDStr {
@@ -411,4 +410,73 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models_Room.Room
 	}
 
 	return &modifiedRoomResponse, nil
+}
+
+func (service *RoomService) ModifyPlace(placeID uint, placeName string) error {
+	existingPlace, err := service.roomRepo.GetPlaceByID(placeID)
+	if err != nil {
+		return err
+	}
+
+	// Update the existing place fields here...
+	existingPlace.PlaceName = placeName
+	// ... Update other fields as needed
+
+	// Save the modified place back to the database
+	_, err = service.roomRepo.EditPlace(*existingPlace)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// modify building
+func (service *RoomService) ModifyBuilding(buildingID uint, buildingName string) error {
+	existingBuilding, err := service.roomRepo.GetBuildingByID(buildingID)
+	if err != nil {
+		return err
+	}
+
+	// Update the existing building fields here...
+	existingBuilding.BuildingName = buildingName
+	// ... Update other fields as needed
+
+	// Save the modified building back to the database
+	_, err = service.roomRepo.EditBuilding(*existingBuilding)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// create RoomPrice and delete RoomPrice by change is_active to 0
+func (service *RoomService) CreateRoomPrice(data dto.TakeRoomPriceDataDto) error {
+	roomPriceModel := models_Room.RoomPrice{
+		RoomID:          data.RoomID,
+		Amount:          data.Amount,
+		UnitType:        data.UnitType,
+		MinDuration:     data.MinDuration,
+		MaxDuration:     data.MaxDuration,
+		Type:            data.Type,
+		DepositUnitType: data.DepositUnitType,
+		DepositAmount:   data.DepositAmount,
+		IsActive:        true,
+	}
+
+	_, err := service.roomRepo.CreateRoomPrice(roomPriceModel)
+
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (service *RoomService) DeleteRoomPrice(roomPriceID uint) error {
+	err := service.roomRepo.DeleteRoomPrice(roomPriceID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

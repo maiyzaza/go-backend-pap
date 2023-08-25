@@ -52,3 +52,14 @@ type RoomPictureResponseDto struct {
 	ID             uint   `json:"id"`
 	RoomPictureUrl string `json:"room_picture_url"`
 }
+
+type TakeRoomPriceDataDto struct {
+	RoomID          uint     `json:"room_id"`
+	Amount          float32  `json:"amount"`
+	UnitType        *string  `json:"unit_type"`
+	MinDuration     *int32   `json:"min_duration"`
+	MaxDuration     *int32   `json:"max_duration"`
+	Type            string   `json:"type"`
+	DepositUnitType *string  `json:"deposit_unit_type"`
+	DepositAmount   *float32 `json:"deposit_amount"`
+}

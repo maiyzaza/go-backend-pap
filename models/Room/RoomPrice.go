@@ -5,8 +5,8 @@ import (
 )
 
 type RoomPrice struct {
-	ID              int        `json:"ID" gorm:"primaryKey"`
-	RoomID          int        `json:"RoomID" gorm:"room_id"`
+	ID              uint       `json:"ID" gorm:"primaryKey"`
+	RoomID          uint       `json:"RoomID" gorm:"room_id"`
 	Amount          float32    `json:"Amount" gorm:"amount"`
 	UnitType        *string    `json:"UnitType" gorm:"unit_type"`
 	MinDuration     *int32     `json:"MinDuration" gorm:"min_duration"`

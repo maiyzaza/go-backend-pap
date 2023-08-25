@@ -170,3 +170,57 @@ func (repo RoomRepo) GetRoomPictureByRoomID(roomID uint) ([]models_Room.RoomPict
 	}
 	return models, nil
 }
+
+func (repo RoomRepo) EditPlace(place models_Room.Place) (*models_Room.Place, error) {
+	err := db.DB.Save(&place).Error
+	if err != nil {
+		return nil, err
+	}
+	return &place, nil
+}
+
+func (repo RoomRepo) GetPlaceByID(placeID uint) (*models_Room.Place, error) {
+	var model models_Room.Place
+	err := ActiveOnlyRoom(db.DB).First(&model, placeID).Error
+	if err != nil {
+		fmt.Println("Error finding place:", err)
+		return nil, err
+	}
+	return &model, nil
+}
+
+// edit building and get building by id
+func (repo RoomRepo) EditBuilding(building models_Room.Building) (*models_Room.Building, error) {
+	err := db.DB.Save(&building).Error
+	if err != nil {
+		return nil, err
+	}
+	return &building, nil
+}
+
+func (repo RoomRepo) GetBuildingByID(buildingID uint) (*models_Room.Building, error) {
+	var model models_Room.Building
+	err := ActiveOnlyRoom(db.DB).First(&model, buildingID).Error
+	if err != nil {
+		fmt.Println("Error finding building:", err)
+		return nil, err
+	}
+	return &model, nil
+}
+
+// create RoomPrice and delete RoomPrice by change is_active to 0
+func (repo RoomRepo) CreateRoomPrice(roomPrice models_Room.RoomPrice) (*models_Room.RoomPrice, error) {
+	err := db.DB.Create(&roomPrice).Error
+	if err != nil {
+		return nil, err
+	}
+	return &roomPrice, nil
+}
+
+func (repo RoomRepo) DeleteRoomPrice(roomPriceID uint) error {
+	err := db.DB.Model(&models_Room.RoomPrice{}).Where("id = ?", roomPriceID).Update("is_active", 0).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
