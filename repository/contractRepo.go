@@ -79,3 +79,38 @@ func (repo ContractRepo) GetRoomContractByID(id uint) (*models_Contract.RoomCont
 	}
 	return &model, nil
 }
+
+// create room contract and person contract
+func (repo ContractRepo) CreateRoomContract(model *models_Contract.RoomContract) (*models_Contract.RoomContract, error) {
+	err := db.DB.Create(&model).Error
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+func (repo ContractRepo) CreatePersonContract(model *models_Contract.PersonContract) (*models_Contract.PersonContract, error) {
+	err := db.DB.Create(&model).Error
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}
+
+// close room contract by using room contract id
+func (repo ContractRepo) CloseRoomContract(id uint) error {
+	err := db.DB.Model(&models_Contract.RoomContract{}).Where("id = ?", id).Update("is_close", true).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// update room contract
+func (repo ContractRepo) UpdateRoomContract(model *models_Contract.RoomContract) (*models_Contract.RoomContract, error) {
+	err := db.DB.Save(&model).Error
+	if err != nil {
+		return nil, err
+	}
+	return model, nil
+}

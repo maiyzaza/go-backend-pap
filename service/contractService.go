@@ -1,8 +1,11 @@
 package service
 
 import (
+	models_Contract "PattayaAvenueProperty/models/Contract"
 	"PattayaAvenueProperty/repository"
 	dto "PattayaAvenueProperty/service/dto"
+	"fmt"
+	"time"
 )
 
 type ContractService struct {
@@ -57,6 +60,13 @@ func (service *ContractService) GetAllContract() ([]dto.ContractResponseDto, err
 			}
 		}
 
+		var contractStatus string
+		if !contract.IsClosed {
+			contractStatus = "active"
+		} else {
+			contractStatus = "inactive"
+		}
+
 		result = append(result, dto.ContractResponseDto{
 			ID:                contract.ID,
 			RoomID:            contract.RoomID,
@@ -66,7 +76,7 @@ func (service *ContractService) GetAllContract() ([]dto.ContractResponseDto, err
 			Deposit:           contract.Deposit,
 			TenantName:        tenantName,
 			RoomNumber:        roomNumber,
-			ContractStatus:    contract.IsClosed,
+			ContractStatus:    contractStatus,
 		})
 	}
 	return result, nil
@@ -174,6 +184,15 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 		}
 	}
 
+	var checkOutDate *string // Use a pointer to string
+
+	if roomContract.CheckOutDate == nil {
+		checkOutDate = nil
+	} else {
+		formattedDate := roomContract.CheckOutDate.Format("2006-01-02 15:04:05")
+		checkOutDate = &formattedDate
+	}
+
 	result := dto.ContractDetailDto{
 		ID:                     roomContract.ID,
 		RoomNumber:             RoomNumber,
@@ -184,9 +203,9 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 		Rental:                 roomContract.Rental,
 		Deposit:                roomContract.Deposit,
 		CheckInDate:            roomContract.CheckInDate.Format("2006-01-02 15:04:05"),
-		CheckOutDate:           roomContract.CheckOutDate.Format("2006-01-02 15:04:05"),
-		CheckInElectricNumber:  roomContract.CheckInElectricNumber,
-		CheckInWaterNumber:     roomContract.CheckInWaterNumber,
+		CheckOutDate:           checkOutDate,
+		CheckInElectricNumber:  *roomContract.CheckInElectricNumber,
+		CheckInWaterNumber:     *roomContract.CheckInWaterNumber,
 		CheckOutElectricNumber: roomContract.CheckOutElectricNumber,
 		CheckOutWaterNumber:    roomContract.CheckOutWaterNumber,
 		IsClosed:               roomContract.IsClosed,
@@ -194,4 +213,87 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 	}
 
 	return result, nil
+}
+
+// create room contract and person contract
+func (service *ContractService) CreateRoomContract(roomCreateRoomContract dto.CreateRoomContractDto) (*models_Contract.RoomContract, error) {
+	// create room contract
+
+	startContractDate, err := time.Parse("2006-01-02", roomCreateRoomContract.StartContractDate)
+	if err != nil {
+		return nil, err
+	}
+	endContractDate, err := time.Parse("2006-01-02", roomCreateRoomContract.EndContractDate)
+	if err != nil {
+		return nil, err
+	}
+	checkInDate, err := time.Parse("2006-01-02", roomCreateRoomContract.CheckInDate)
+	if err != nil {
+		return nil, err
+	}
+	roomContract := models_Contract.RoomContract{
+		RoomID:                roomCreateRoomContract.RoomID,
+		ContractName:          "Room Contract",
+		StartContractDate:     startContractDate,
+		EndContractDate:       endContractDate,
+		Rental:                roomCreateRoomContract.Rental,
+		Deposit:               roomCreateRoomContract.Deposit,
+		CheckInDate:           &checkInDate,
+		CheckInWaterNumber:    &roomCreateRoomContract.CheckInWaterNumber,
+		CheckInElectricNumber: &roomCreateRoomContract.CheckInElectricNumber,
+		IsActive:              true,
+	}
+	roomContractModel, err := service.contractRepo.CreateRoomContract(&roomContract)
+	if err != nil {
+		return nil, err
+	}
+	return roomContractModel, nil
+}
+
+// create person contract
+func (service *ContractService) CreatePersonContract(roomContractID uint, personID uint, personContractType string) error {
+	personContract := models_Contract.PersonContract{
+		PersonID:       personID,
+		RoomContractID: roomContractID,
+		Type:           personContractType,
+		IsActive:       true,
+	}
+	var err error
+
+	_, err = service.contractRepo.CreatePersonContract(&personContract)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// close room contract by using room contract id
+func (service *ContractService) CloseRoomContract(id uint) error {
+	err := service.contractRepo.CloseRoomContract(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// update room contract
+func (service *ContractService) UpdateRoomContract(id uint, roomContractDto dto.CloseRoomContractDto) error {
+	roomContract, err := service.contractRepo.GetRoomContractByID(id)
+	if err != nil {
+		return err
+	}
+	var x time.Time
+	x, err = time.Parse("2006-01-02", roomContractDto.CheckOutDate)
+	fmt.Println(x)
+
+	roomContract.CheckOutDate = &x
+	roomContract.CheckOutWaterNumber = &roomContractDto.CheckOutWaterNumber
+	roomContract.CheckOutElectricNumber = &roomContractDto.CheckOutElectricNumber
+	roomContract.IsClosed = true
+
+	_, err = service.contractRepo.UpdateRoomContract(roomContract)
+	if err != nil {
+		return err
+	}
+	return nil
 }

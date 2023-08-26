@@ -4,6 +4,7 @@ import (
 	"PattayaAvenueProperty/constants"
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
+	"PattayaAvenueProperty/service/dto"
 	"net/http"
 	"strconv"
 
@@ -70,5 +71,54 @@ func (controller *ContractController) GetRoomContractByID(c *gin.Context) {
 		StatusCode: http.StatusOK,
 		Message:    constants.SUCCESS,
 		Data:       data,
+	})
+}
+
+// create room contract then create person contract by using room contract id
+func (controller *ContractController) CreateRoomContract(c *gin.Context) {
+	var requestDto dto.CreateRoomContractDto
+	if err := c.ShouldBindJSON(&requestDto); err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	roomContract, err := controller.contractService.CreateRoomContract(requestDto)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	err = controller.contractService.CreatePersonContract(roomContract.ID, requestDto.PersonID, requestDto.PersonContractType)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// close room contract by using room contract id and this data CloseRoomContractDto
+func (controller *ContractController) CloseRoomContract(c *gin.Context) {
+	var requestDto dto.CloseRoomContractDto
+	if err := c.ShouldBindJSON(&requestDto); err != nil {
+		_ = c.Error(err)
+		return
+	}
+	var err error
+
+	err = controller.contractService.UpdateRoomContract(requestDto.RoomContractID, requestDto)
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
 	})
 }

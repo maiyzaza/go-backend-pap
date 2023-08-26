@@ -1,44 +1,64 @@
 package dto
 
 type ContractResponseDto struct {
-	ID                uint    `json:"ID"`
-	RoomID            uint    `json:"RoomID"`
-	StartContractDate string  `json:"StartContractDate"`
-	EndContractDate   string  `json:"EndContractDate"`
-	Rental            float32 `json:"Rental"`
-	Deposit           float32 `json:"Deposit"`
-	TenantName        string  `json:"TenantName"`
-	RoomNumber        string  `json:"RoomNumber"`
-	ContractStatus    bool    `json:"ContractStatus"`
+	ID                uint    `json:"id"`
+	RoomID            uint    `json:"room_id"`
+	StartContractDate string  `json:"start_contract_date"`
+	EndContractDate   string  `json:"end_contract_date"`
+	Rental            float32 `json:"rental"`
+	Deposit           float32 `json:"deposit"`
+	TenantName        string  `json:"tenant_name"`
+	RoomNumber        string  `json:"room_number"`
+	ContractStatus    string  `json:"contract_status"`
 }
 
 type ContractByIDResponseDto struct {
-	ID                uint    `json:"ID"`
-	RoomID            uint    `json:"RoomID"`
-	StartContractDate string  `json:"StartContractDate"`
-	EndContractDate   string  `json:"EndContractDate"`
-	Rental            float32 `json:"Rental"`
-	Deposit           float32 `json:"Deposit"`
-	TenantName        string  `json:"TenantName"`
-	ContactType       string  `json:"ContactType"`
-	ContractStatus    string  `json:"ContractStatus"`
+	ID                uint    `json:"id"`
+	RoomID            uint    `json:"room_id"`
+	StartContractDate string  `json:"start_contract_date"`
+	EndContractDate   string  `json:"end_contract_date"`
+	Rental            float32 `json:"rental"`
+	Deposit           float32 `json:"deposit"`
+	TenantName        string  `json:"tenant_name"`
+	ContactType       string  `json:"contact_type"`
+	ContractStatus    string  `json:"contract_status"`
 }
 
 type ContractDetailDto struct {
-	ID                     uint    `json:"ID"`
-	RoomNumber             string  `json:"RoomNumber"`
-	RoomAddress            string  `json:"RoomAddress"`
-	TenantName             string  `json:"TenantName"`
-	StartContractDate      string  `json:"StartContractDate"`
-	EndContractDate        string  `json:"EndContractDate"`
-	Rental                 float32 `json:"Rental"`
-	Deposit                float32 `json:"Deposit"`
-	CheckInDate            string  `json:"CheckInDate"`
-	CheckOutDate           string  `json:"CheckOutDate"`
-	CheckInElectricNumber  *int    `json:"CheckInElectricNumber"`
-	CheckInWaterNumber     *int    `json:"CheckInWaterNumber"`
-	CheckOutElectricNumber *int    `json:"CheckOutElectricNumber"`
-	CheckOutWaterNumber    *int    `json:"CheckOutWaterNumber"`
-	IsClosed               bool    `json:"IsClosed"`
-	UpdatedAt              string  `json:"UpdatedAt"`
+	ID                     uint    `json:"id"`
+	RoomNumber             string  `json:"room_number"`
+	RoomAddress            string  `json:"room_address"`
+	TenantName             string  `json:"tenant_name"`
+	StartContractDate      string  `json:"start_contract_date"`
+	EndContractDate        string  `json:"end_contract_date"`
+	Rental                 float32 `json:"rental"`
+	Deposit                float32 `json:"deposit"`
+	CheckInDate            string  `json:"check_in_date"`
+	CheckOutDate           *string `json:"check_out_date"`
+	CheckInElectricNumber  int     `json:"check_in_electric_number"`
+	CheckInWaterNumber     int     `json:"check_in_water_number"`
+	CheckOutElectricNumber *int    `json:"check_out_electric_number"`
+	CheckOutWaterNumber    *int    `json:"check_out_water_number"`
+	IsClosed               bool    `json:"is_closed"`
+	UpdatedAt              string  `json:"updated_at"`
+}
+
+type CreateRoomContractDto struct {
+	RoomID                uint    `json:"room_id"`
+	PersonID              uint    `json:"person_id"`
+	PersonContractType    string  `json:"person_contract_type"`
+	StartContractDate     string  `json:"start_contract_date"`
+	EndContractDate       string  `json:"end_contract_date"`
+	Rental                float32 `json:"rental"`
+	Deposit               float32 `json:"deposit"`
+	CheckInDate           string  `json:"check_in_date"`
+	CheckInWaterNumber    int     `json:"check_in_water_number"`
+	CheckInElectricNumber int     `json:"check_in_electric_number"`
+}
+
+type CloseRoomContractDto struct {
+	RoomContractID         uint   `json:"room_contract_id"`
+	CheckOutDate           string `json:"check_out_date"`
+	CheckOutWaterNumber    int    `json:"check_out_water_number"`
+	CheckOutElectricNumber int    `json:"check_out_electric_number"`
 }
