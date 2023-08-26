@@ -498,19 +498,21 @@ func (service *RoomService) DeleteRoomPrice(roomPriceID uint) error {
 }
 
 // create RoomPicture and delete RoomPicture by change is_active to 0
-func (service *RoomService) CreateRoomPicture(roomPictureData dto.TakeRoomPictureDataDto) error {
+func (service *RoomService) CreateRoomPicture(roomPictureData dto.TakeRoomPictureDataDto) (dto.RoomPictureResponseDto, error) {
 	roomPictureModel := models_Room.RoomPicture{
 		RoomID:         roomPictureData.RoomID,
 		RoomPictureUrl: roomPictureData.RoomPictureUrl,
 		IsActive:       true,
 	}
 
-	_, err := service.roomRepo.CreateRoomPicture(roomPictureModel)
-
+	roomPicture, err := service.roomRepo.CreateRoomPicture(roomPictureModel)
 	if err != nil {
-		return err
+		return dto.RoomPictureResponseDto{}, err
 	}
-	return nil
+	return dto.RoomPictureResponseDto{
+		ID:             roomPicture.ID,
+		RoomPictureUrl: roomPicture.RoomPictureUrl,
+	}, nil
 }
 
 func (service *RoomService) DeleteRoomPicture(roomPictureID uint) error {

@@ -300,7 +300,7 @@ func (controller *RoomController) CreateRoomPicture(c *gin.Context) {
 		})
 		return
 	}
-	err := controller.roomService.CreateRoomPicture(body)
+	roomPictureData, err := controller.roomService.CreateRoomPicture(body)
 	if err != nil {
 		c.Error(err)
 		return
@@ -308,7 +308,7 @@ func (controller *RoomController) CreateRoomPicture(c *gin.Context) {
 	c.JSON(http.StatusOK, handler.Wrapper{
 		StatusCode: http.StatusOK,
 		Message:    constants.SUCCESS,
-		Data:       nil,
+		Data:       roomPictureData,
 	})
 }
 
