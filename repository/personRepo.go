@@ -51,3 +51,69 @@ func (repo PersonRepo) GetAllContact() ([]models_Person.Contact, error) {
 	}
 	return model, nil
 }
+
+// create person and edit person
+func (repo PersonRepo) CreatePerson(person *models_Person.Person) (*models_Person.Person, error) {
+	err := db.DB.Create(&person).Error
+	if err != nil {
+		fmt.Println("Error creating records:", err)
+		return nil, err
+	}
+	return person, nil
+}
+
+func (repo PersonRepo) UpdatePerson(person *models_Person.Person) (*models_Person.Person, error) {
+	err := db.DB.Save(&person).Error
+	if err != nil {
+		fmt.Println("Error updating records:", err)
+		return nil, err
+	}
+	return person, nil
+}
+
+// create contact and edit contact and delete contact
+func (repo PersonRepo) CreateContact(contact *models_Person.Contact) (*models_Person.Contact, error) {
+	err := db.DB.Create(&contact).Error
+	if err != nil {
+		fmt.Println("Error creating records:", err)
+		return nil, err
+	}
+	return contact, nil
+}
+
+func (repo PersonRepo) UpdateContact(contact *models_Person.Contact) (*models_Person.Contact, error) {
+	err := db.DB.Save(&contact).Error
+	if err != nil {
+		fmt.Println("Error updating records:", err)
+		return nil, err
+	}
+	return contact, nil
+}
+
+func (repo PersonRepo) DeleteContact(contact *models_Person.Contact) (*models_Person.Contact, error) {
+	err := db.DB.Model(&models_Person.Contact{}).Where("id = ?", contact.ID).Update("is_active", 0).Error
+	if err != nil {
+		fmt.Println("Error deleting records:", err)
+		return nil, err
+	}
+	return contact, nil
+}
+
+// create bank account and edit bank account
+func (repo PersonRepo) CreateBankAccount(bankAccount *models_Person.BankAccount) (*models_Person.BankAccount, error) {
+	err := db.DB.Create(&bankAccount).Error
+	if err != nil {
+		fmt.Println("Error creating records:", err)
+		return nil, err
+	}
+	return bankAccount, nil
+}
+
+func (repo PersonRepo) UpdateBankAccount(bankAccount *models_Person.BankAccount) (*models_Person.BankAccount, error) {
+	err := db.DB.Save(&bankAccount).Error
+	if err != nil {
+		fmt.Println("Error updating records:", err)
+		return nil, err
+	}
+	return bankAccount, nil
+}

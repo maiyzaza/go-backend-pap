@@ -39,3 +39,10 @@ type BankAccountDto struct {
 	AccountNumber string  `json:"account_number" gorm:"account_number"`
 	SwiftCode     *string `json:"swift_code" gorm:"swift_code"`
 }
+
+type CreatePersonDto struct {
+	FullName       string `json:"full_name" gorm:"full_name"`
+	IdentityNumber string `json:"identity_number" gorm:"identity_number"`
+	TypeContact    string `json:"type_contact" gorm:"type_contact"`
+	ValueContact   string `json:"value_contact" gorm:"value_contact"`
+}

@@ -1,6 +1,7 @@
 package service
 
 import (
+	models_Person "PattayaAvenueProperty/models/Person"
 	"PattayaAvenueProperty/repository"
 
 	dto "PattayaAvenueProperty/service/dto"
@@ -48,6 +49,7 @@ func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDetailDt
 		for _, bankAccount := range person.BankAccounts {
 			bank = append(bank, dto.BankAccountDto{
 				ID:            bankAccount.ID,
+				PersonId:      bankAccount.PersonID,
 				AccountNumber: bankAccount.AccountNumber,
 				BankName:      bankAccount.BankName,
 				AccountName:   bankAccount.AccountName,
@@ -71,4 +73,50 @@ func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDetailDt
 		})
 	}
 	return result, nil
+}
+
+// create person using CreatePersonDto
+func (service *PersonService) CreatePerson(personDto dto.CreatePersonDto) (*dto.PersonDto, error) {
+	person := models_Person.Person{
+		FullName:       personDto.FullName,
+		IdentityNumber: personDto.IdentityNumber,
+		IsActive:       true,
+	}
+	personModel, err := service.personRepo.CreatePerson(&person)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.PersonDto{
+		ID:             personModel.ID,
+		FullName:       personModel.FullName,
+		IdentityNumber: personModel.IdentityNumber,
+	}, nil
+}
+
+// create contact using CreatePersonDto
+func (service *PersonService) CreateContact(personID uint, typeContact string, valuueContact string) error {
+	contact := models_Person.Contact{
+		PersonID: personID,
+		Type:     typeContact,
+		Value:    valuueContact,
+		IsActive: true,
+	}
+	_, err := service.personRepo.CreateContact(&contact)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// create bank account intitial using only personID
+func (service *PersonService) CreateBankAccount(personID uint) error {
+	bankAccount := models_Person.BankAccount{
+		PersonID: personID,
+		IsActive: true,
+	}
+	_, err := service.personRepo.CreateBankAccount(&bankAccount)
+	if err != nil {
+		return err
+	}
+	return nil
 }
