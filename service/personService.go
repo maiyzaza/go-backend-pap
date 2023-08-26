@@ -51,6 +51,7 @@ func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDetailDt
 				ID:            bankAccount.ID,
 				PersonId:      bankAccount.PersonID,
 				AccountNumber: bankAccount.AccountNumber,
+				BankAddress:   bankAccount.BankAddress,
 				BankName:      bankAccount.BankName,
 				AccountName:   bankAccount.AccountName,
 			})
@@ -119,4 +120,81 @@ func (service *PersonService) CreateBankAccount(personID uint) error {
 		return err
 	}
 	return nil
+}
+
+// edit person using EditPeopleDto
+func (service *PersonService) UpdatePerson(personDto dto.EditPeopleDto) (*dto.PersonDto, error) {
+	existingPerson, err := service.personRepo.FindPersonById(personDto.PersonID)
+	if err != nil {
+		return nil, err
+	}
+
+	existingPerson.FullName = personDto.FullName
+	existingPerson.IdentityNumber = personDto.IdentityNumber
+
+	personModel, err := service.personRepo.UpdatePerson(existingPerson)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.PersonDto{
+		ID:             personModel.ID,
+		FullName:       personModel.FullName,
+		IdentityNumber: personModel.IdentityNumber,
+	}, nil
+}
+
+// edit contact using CreateContactDto
+func (service *PersonService) UpdateContact(contactDto dto.EditContactDto) (*dto.ContactDto, error) {
+	existingContact, err := service.personRepo.FindContactById(contactDto.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	existingContact.Type = contactDto.TypeContact
+	existingContact.Value = contactDto.ValueContact
+
+	contactModel, err := service.personRepo.UpdateContact(existingContact)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.ContactDto{
+		ID:    contactModel.ID,
+		Type:  contactModel.Type,
+		Value: contactModel.Value,
+	}, nil
+}
+
+// delete contact using parameter contactID
+func (service *PersonService) DeleteContact(contactID uint) error {
+	_, err := service.personRepo.DeleteContact(contactID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// edit bank account using BankAccountDto
+func (service *PersonService) UpdateBankAccount(bankAccountDto dto.BankAccountDto) (*dto.BankAccountDto, error) {
+	exitstingBankAccount, err := service.personRepo.FindBankAccountById(bankAccountDto.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	exitstingBankAccount.BankName = bankAccountDto.BankName
+	exitstingBankAccount.BankAddress = bankAccountDto.BankAddress
+	exitstingBankAccount.AccountName = bankAccountDto.AccountName
+	exitstingBankAccount.AccountNumber = bankAccountDto.AccountNumber
+	exitstingBankAccount.SwiftCode = bankAccountDto.SwiftCode
+
+	bankAccountModel, err := service.personRepo.UpdateBankAccount(exitstingBankAccount)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.BankAccountDto{
+		ID:            bankAccountModel.ID,
+		PersonId:      bankAccountModel.PersonID,
+		AccountNumber: bankAccountModel.AccountNumber,
+		BankName:      bankAccountModel.BankName,
+		AccountName:   bankAccountModel.AccountName,
+	}, nil
 }

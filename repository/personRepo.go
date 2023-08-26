@@ -90,13 +90,23 @@ func (repo PersonRepo) UpdateContact(contact *models_Person.Contact) (*models_Pe
 	return contact, nil
 }
 
-func (repo PersonRepo) DeleteContact(contact *models_Person.Contact) (*models_Person.Contact, error) {
-	err := db.DB.Model(&models_Person.Contact{}).Where("id = ?", contact.ID).Update("is_active", 0).Error
+func (repo PersonRepo) DeleteContact(roomID uint) (*models_Person.Contact, error) {
+	err := db.DB.Model(&models_Person.Contact{}).Where("id = ?", roomID).Update("is_active", 0).Error
 	if err != nil {
 		fmt.Println("Error deleting records:", err)
 		return nil, err
 	}
-	return contact, nil
+	return nil, nil
+}
+
+func (repo PersonRepo) FindContactById(contactID uint) (*models_Person.Contact, error) {
+	var model models_Person.Contact
+	err := ActiveOnlyPerson(db.DB).Where("id = ?", contactID).Find(&models_Person.Contact{}).First(&model).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return &model, nil
 }
 
 // create bank account and edit bank account
@@ -116,4 +126,14 @@ func (repo PersonRepo) UpdateBankAccount(bankAccount *models_Person.BankAccount)
 		return nil, err
 	}
 	return bankAccount, nil
+}
+
+func (repo PersonRepo) FindBankAccountById(bankAccountID uint) (*models_Person.BankAccount, error) {
+	var model models_Person.BankAccount
+	err := ActiveOnlyPerson(db.DB).Where("id = ?", bankAccountID).Find(&models_Person.BankAccount{}).First(&model).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return &model, nil
 }

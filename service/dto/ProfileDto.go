@@ -46,3 +46,21 @@ type CreatePersonDto struct {
 	TypeContact    string `json:"type_contact" gorm:"type_contact"`
 	ValueContact   string `json:"value_contact" gorm:"value_contact"`
 }
+
+type EditPeopleDto struct {
+	PersonID       uint   `json:"person_id" gorm:"person_id"`
+	FullName       string `json:"full_name" gorm:"full_name"`
+	IdentityNumber string `json:"identity_number" gorm:"identity_number"`
+}
+
+type CreateContactDto struct {
+	PersonID     uint   `json:"person_id" gorm:"person_id"`
+	TypeContact  string `json:"type_contact" gorm:"type_contact"`
+	ValueContact string `json:"value_contact" gorm:"value_contact"`
+}
+
+type EditContactDto struct {
+	ID           uint   `json:"id" gorm:"primaryKey"`
+	TypeContact  string `json:"type_contact" gorm:"type_contact"`
+	ValueContact string `json:"value_contact" gorm:"value_contact"`
+}

@@ -5,8 +5,8 @@ import (
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
 	"PattayaAvenueProperty/service/dto"
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -48,27 +48,6 @@ func (controller *PersonController) GetProfilesWithBankAccount(c *gin.Context) {
 	})
 }
 
-// func (controller *RoomController) CreateRoomDocument(c *gin.Context) {
-// 	var body dto.TakeRoomPictureDataDto
-
-// 	if err := c.BindJSON(&body); err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid request body",
-// 		})
-// 		return
-// 	}
-// 	err := controller.roomService.CreateRoomDocument(body)
-// 	if err != nil {
-// 		c.Error(err)
-// 		return
-// 	}
-// 	c.JSON(http.StatusOK, handler.Wrapper{
-// 		StatusCode: http.StatusOK,
-// 		Message:    constants.SUCCESS,
-// 		Data:       nil,
-// 	})
-// }
-
 // create person
 func (controller *PersonController) CreatePerson(c *gin.Context) {
 	var body dto.CreatePersonDto
@@ -85,7 +64,6 @@ func (controller *PersonController) CreatePerson(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	fmt.Println(person)
 
 	//create contact and bank account
 	err1 := controller.personService.CreateContact(person.ID, body.TypeContact, body.ValueContact)
@@ -97,6 +75,124 @@ func (controller *PersonController) CreatePerson(c *gin.Context) {
 	err2 := controller.personService.CreateBankAccount(person.ID)
 	if err != nil {
 		c.Error(err2)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// update person using EditPeopleDto
+func (controller *PersonController) UpdatePerson(c *gin.Context) {
+	var body dto.EditPeopleDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	_, err := controller.personService.UpdatePerson(body)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// create contact using CreateContactDto
+func (controller *PersonController) CreateContact(c *gin.Context) {
+	var body dto.CreateContactDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	err := controller.personService.CreateContact(body.PersonID, body.TypeContact, body.ValueContact)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// edit contact using EditContactDto
+func (controller *PersonController) UpdateContact(c *gin.Context) {
+	var body dto.EditContactDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	_, err := controller.personService.UpdateContact(body)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// delete contact using parameter contactID
+func (controller *PersonController) DeleteContact(c *gin.Context) {
+	contactID := c.Param("contactID")
+
+	contactIDUint, err := strconv.ParseUint(contactID, 10, 64)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	err1 := controller.personService.DeleteContact(uint(contactIDUint))
+	if err1 != nil {
+		c.Error(err1)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// edit bank account using BankAccountDto
+func (controller *PersonController) UpdateBankAccount(c *gin.Context) {
+	var body dto.BankAccountDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	_, err := controller.personService.UpdateBankAccount(body)
+	if err != nil {
+		c.Error(err)
 		return
 	}
 
