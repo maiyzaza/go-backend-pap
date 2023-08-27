@@ -109,9 +109,7 @@ func (controller *ContractController) CloseRoomContract(c *gin.Context) {
 		return
 	}
 
-	var err error
-
-	err = controller.contractService.UpdateRoomContract(requestDto.RoomContractID, requestDto)
+	err := controller.contractService.UpdateRoomContract(requestDto.RoomContractID, requestDto)
 	if err != nil {
 		_ = c.Error(err)
 		return

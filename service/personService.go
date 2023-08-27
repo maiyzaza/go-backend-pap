@@ -33,47 +33,33 @@ func (service *PersonService) GetProfiles() ([]dto.PersonDto, error) {
 	return result, nil
 }
 
-func (service *PersonService) GetProfilesWithBankAccount() ([]dto.PersonDetailDto, error) {
-	persons, err := service.personRepo.FindAll()
+func (service *PersonService) GetProfilesWithBankAccountByPersonID(personID uint) (dto.PersonDetailDto, error) {
+	person, err := service.personRepo.FindPersonById(personID)
 	if err != nil {
-		return nil, err
+		return dto.PersonDetailDto{}, err
 	}
-	contacts, err := service.personRepo.GetAllContact()
+	bankAccounts, err := service.personRepo.FindBankAccountByPersonID(personID)
 	if err != nil {
-		return nil, err
+		return dto.PersonDetailDto{}, err
 	}
 
-	var result []dto.PersonDetailDto
-	for _, person := range persons {
-		var bank []dto.BankAccountDto
-		for _, bankAccount := range person.BankAccounts {
-			bank = append(bank, dto.BankAccountDto{
-				ID:            bankAccount.ID,
-				PersonId:      bankAccount.PersonID,
-				AccountNumber: bankAccount.AccountNumber,
-				BankAddress:   bankAccount.BankAddress,
-				BankName:      bankAccount.BankName,
-				AccountName:   bankAccount.AccountName,
-			})
-		}
-		var contactList []dto.ContactDto
-		for _, contact := range contacts {
-			if person.ID == contact.PersonID {
-				contactList = append(contactList, dto.ContactDto{
-					ID:    contact.ID,
-					Type:  contact.Type,
-					Value: contact.Value,
-				})
-			}
-		}
-		result = append(result, dto.PersonDetailDto{
-			ID:           person.ID,
-			FullName:     person.FullName,
-			Contacts:     contactList,
-			BankAccounts: bank,
+	var result []dto.BankAccountDto
+	for _, bankAccount := range bankAccounts {
+		result = append(result, dto.BankAccountDto{
+			ID:            bankAccount.ID,
+			PersonId:      bankAccount.PersonID,
+			AccountNumber: bankAccount.AccountNumber,
+			BankName:      bankAccount.BankName,
+			AccountName:   bankAccount.AccountName,
 		})
 	}
-	return result, nil
+
+	return dto.PersonDetailDto{
+		ID:             person.ID,
+		FullName:       person.FullName,
+		IdentityNumber: person.IdentityNumber,
+		BankAccounts:   result,
+	}, nil
 }
 
 // create person using CreatePersonDto
@@ -197,4 +183,21 @@ func (service *PersonService) UpdateBankAccount(bankAccountDto dto.BankAccountDt
 		BankName:      bankAccountModel.BankName,
 		AccountName:   bankAccountModel.AccountName,
 	}, nil
+}
+
+// get all contact using parameter personID
+func (service *PersonService) GetAllContactByPersonID(personID uint) ([]dto.ContactDto, error) {
+	contacts, err := service.personRepo.GetAllContactByPersonID(personID)
+	if err != nil {
+		return nil, err
+	}
+	var result []dto.ContactDto
+	for _, contact := range contacts {
+		result = append(result, dto.ContactDto{
+			ID:    contact.ID,
+			Type:  contact.Type,
+			Value: contact.Value,
+		})
+	}
+	return result, nil
 }

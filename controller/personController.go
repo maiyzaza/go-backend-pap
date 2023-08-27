@@ -33,9 +33,17 @@ func (controller *PersonController) GetProfiles(c *gin.Context) {
 	})
 }
 
-func (controller *PersonController) GetProfilesWithBankAccount(c *gin.Context) {
+func (controller *PersonController) GetProfilesWithBankAccountByPersonID(c *gin.Context) {
 
-	data, err := controller.personService.GetProfilesWithBankAccount()
+	personID := c.Param("personID")
+
+	personIDUint, err := strconv.ParseUint(personID, 10, 64)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	data, err := controller.personService.GetProfilesWithBankAccountByPersonID(uint(personIDUint))
 	if err != nil {
 		_ = c.Error(err)
 		return
@@ -200,5 +208,28 @@ func (controller *PersonController) UpdateBankAccount(c *gin.Context) {
 		StatusCode: http.StatusOK,
 		Message:    constants.SUCCESS,
 		Data:       nil,
+	})
+}
+
+// GetAllContact ByPersonID
+func (controller *PersonController) GetAllContactByPersonID(c *gin.Context) {
+	personID := c.Param("personID")
+
+	personIDUint, err := strconv.ParseUint(personID, 10, 64)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	data, err := controller.personService.GetAllContactByPersonID(uint(personIDUint))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       data,
 	})
 }

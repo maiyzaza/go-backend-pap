@@ -52,6 +52,17 @@ func (repo PersonRepo) GetAllContact() ([]models_Person.Contact, error) {
 	return model, nil
 }
 
+// get all contact using parameter personID
+func (repo PersonRepo) GetAllContactByPersonID(personID uint) ([]models_Person.Contact, error) {
+	var model []models_Person.Contact
+	err := ActiveOnlyPerson(db.DB).Where("person_id = ?", personID).Find(&models_Person.Contact{}).Find(&model).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return model, nil
+}
+
 // create person and edit person
 func (repo PersonRepo) CreatePerson(person *models_Person.Person) (*models_Person.Person, error) {
 	err := db.DB.Create(&person).Error
@@ -136,4 +147,15 @@ func (repo PersonRepo) FindBankAccountById(bankAccountID uint) (*models_Person.B
 		return nil, err
 	}
 	return &model, nil
+}
+
+// find bank account by person id
+func (repo PersonRepo) FindBankAccountByPersonID(personID uint) ([]models_Person.BankAccount, error) {
+	var model []models_Person.BankAccount
+	err := ActiveOnlyPerson(db.DB).Where("person_id = ?", personID).Find(&models_Person.BankAccount{}).Find(&model).Error
+	if err != nil {
+		fmt.Println("Error finding records:", err)
+		return nil, err
+	}
+	return model, nil
 }

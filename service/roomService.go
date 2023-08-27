@@ -280,20 +280,11 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	if err != nil {
 		return nil, err
 	}
-
-	// person, err := service.personRepo.FindPersonById(*room.OwnerID)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	roomDocument, err := service.roomRepo.GetRoomDocumentByRoomID(roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	// jsonDataPerson, err := json.Marshal(person)
-	// if err != nil {
-	// 	return nil, err
-	// }
 	jsonDataRoomPrices, err := json.Marshal(price)
 	if err != nil {
 		return nil, err
@@ -303,10 +294,6 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		return nil, err
 	}
 
-	// var jsonDataPersons map[string]interface{}
-	// if err := json.Unmarshal(jsonDataPerson, &jsonDataPersons); err != nil {
-	// 	fmt.Println("Error:", err)
-	// }
 	var jsonDataRoomPicture []map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonDataRoomPictures), &jsonDataRoomPicture); err != nil {
 		fmt.Println("Error:", err)
@@ -398,6 +385,7 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		RoomDocuments:      roomDocuments,
 	}
 	roomResponse.OwnerName = ownerName
+	fmt.Println(roomResponse.RoomPrices)
 
 	return &roomResponse, nil
 }
