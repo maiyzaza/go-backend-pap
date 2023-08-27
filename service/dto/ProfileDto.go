@@ -17,10 +17,10 @@ type PersonDto struct {
 }
 
 type PersonDetailDto struct {
-	ID             uint             `json:"id" gorm:"primaryKey"`
-	FullName       string           `json:"full_name" gorm:"full_name"`
-	IdentityNumber string           `json:"identity_number" gorm:"identity_number"`
-	BankAccounts   []BankAccountDto `json:"bank_accounts" gorm:"bank_accounts"`
+	ID             uint           `json:"id" gorm:"primaryKey"`
+	FullName       string         `json:"full_name" gorm:"full_name"`
+	IdentityNumber string         `json:"identity_number" gorm:"identity_number"`
+	BankAccounts   BankAccountDto `json:"bank_accounts" gorm:"bank_accounts"`
 }
 
 type ContactDto struct {

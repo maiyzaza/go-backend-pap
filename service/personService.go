@@ -43,22 +43,21 @@ func (service *PersonService) GetProfilesWithBankAccountByPersonID(personID uint
 		return dto.PersonDetailDto{}, err
 	}
 
-	var result []dto.BankAccountDto
-	for _, bankAccount := range bankAccounts {
-		result = append(result, dto.BankAccountDto{
-			ID:            bankAccount.ID,
-			PersonId:      bankAccount.PersonID,
-			AccountNumber: bankAccount.AccountNumber,
-			BankName:      bankAccount.BankName,
-			AccountName:   bankAccount.AccountName,
-		})
+	var bankAccount dto.BankAccountDto = dto.BankAccountDto{
+		ID:            bankAccounts.ID,
+		PersonId:      bankAccounts.PersonID,
+		BankName:      bankAccounts.BankName,
+		BankAddress:   bankAccounts.BankAddress,
+		AccountName:   bankAccounts.AccountName,
+		AccountNumber: bankAccounts.AccountNumber,
+		SwiftCode:     bankAccounts.SwiftCode,
 	}
 
 	return dto.PersonDetailDto{
 		ID:             person.ID,
 		FullName:       person.FullName,
 		IdentityNumber: person.IdentityNumber,
-		BankAccounts:   result,
+		BankAccounts:   bankAccount,
 	}, nil
 }
 

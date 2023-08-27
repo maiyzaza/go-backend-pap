@@ -149,13 +149,13 @@ func (repo PersonRepo) FindBankAccountById(bankAccountID uint) (*models_Person.B
 	return &model, nil
 }
 
-// find bank account by person id
-func (repo PersonRepo) FindBankAccountByPersonID(personID uint) ([]models_Person.BankAccount, error) {
-	var model []models_Person.BankAccount
-	err := ActiveOnlyPerson(db.DB).Where("person_id = ?", personID).Find(&models_Person.BankAccount{}).Find(&model).Error
+// find bank account by person id only one
+func (repo PersonRepo) FindBankAccountByPersonID(personID uint) (*models_Person.BankAccount, error) {
+	var model models_Person.BankAccount
+	err := ActiveOnlyPerson(db.DB).Where("person_id = ?", personID).Find(&models_Person.BankAccount{}).First(&model).Error
 	if err != nil {
 		fmt.Println("Error finding records:", err)
 		return nil, err
 	}
-	return model, nil
+	return &model, nil
 }
