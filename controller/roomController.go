@@ -6,7 +6,6 @@ import (
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
 	"PattayaAvenueProperty/service/dto"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -348,11 +347,7 @@ func (controller *RoomController) CreateRoomDocument(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(body)
-	fmt.Println(body.RoomID)
-	fmt.Println(body.RoomPictureUrl)
-
-	err := controller.roomService.CreateRoomDocument(body)
+	roomDocumentData, err := controller.roomService.CreateRoomDocument(body)
 	if err != nil {
 		c.Error(err)
 		return
@@ -360,7 +355,7 @@ func (controller *RoomController) CreateRoomDocument(c *gin.Context) {
 	c.JSON(http.StatusOK, handler.Wrapper{
 		StatusCode: http.StatusOK,
 		Message:    constants.SUCCESS,
-		Data:       nil,
+		Data:       roomDocumentData,
 	})
 }
 

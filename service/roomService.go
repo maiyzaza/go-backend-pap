@@ -535,21 +535,21 @@ func (service *RoomService) DeleteRoomPicture(roomPictureID uint) error {
 }
 
 // create RoomDocument and delete RoomDocument by change is_active to 0
-func (service *RoomService) CreateRoomDocument(roomDocumentPictureData dto.TakeRoomPictureDataDto) error {
+func (service *RoomService) CreateRoomDocument(roomDocumentPictureData dto.TakeRoomPictureDataDto) (dto.RoomDocumentResponseDto, error) {
 	roomDocumentPictureModel := models_Document.RoomDocument{
 		RoomID:      roomDocumentPictureData.RoomID,
 		DocumentUrl: roomDocumentPictureData.RoomPictureUrl,
 		IsActive:    true,
 	}
-	fmt.Println(roomDocumentPictureData.RoomPictureUrl)
-	fmt.Println(roomDocumentPictureModel.DocumentUrl)
 
-	_, err := service.roomRepo.CreateRoomDocument(roomDocumentPictureModel)
-
+	RoomDocumentCteated, err := service.roomRepo.CreateRoomDocument(roomDocumentPictureModel)
 	if err != nil {
-		return err
+		return dto.RoomDocumentResponseDto{}, err
 	}
-	return nil
+	return dto.RoomDocumentResponseDto{
+		ID:           RoomDocumentCteated.ID,
+		RoomDocument: RoomDocumentCteated.DocumentUrl,
+	}, nil
 }
 
 func (service *RoomService) DeleteRoomDocument(roomDocumentPictureID uint) error {
