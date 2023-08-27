@@ -6,6 +6,7 @@ import (
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
 	"PattayaAvenueProperty/service/dto"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -144,6 +145,7 @@ func (controller *RoomController) EditRoom(c *gin.Context) {
 		RoomName:           &body.RoomName, // Convert string to *string
 		RoomNumber:         body.RoomNumber,
 		RoomAddress:        body.RoomAddress,
+		OwnerID:            &body.OwnerID,            // Convert string to *string
 		ElectricNumber:     &body.ElectricNumber,     // Convert string to *string
 		ElectricUserNumber: &body.ElectricUserNumber, // Convert string to *string
 		AmountOfBedRoom:    body.AmountOfBedRoom,
@@ -345,6 +347,11 @@ func (controller *RoomController) CreateRoomDocument(c *gin.Context) {
 		})
 		return
 	}
+
+	fmt.Println(body)
+	fmt.Println(body.RoomID)
+	fmt.Println(body.RoomPictureUrl)
+
 	err := controller.roomService.CreateRoomDocument(body)
 	if err != nil {
 		c.Error(err)

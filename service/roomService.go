@@ -280,19 +280,20 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	if err != nil {
 		return nil, err
 	}
-	person, err := service.personRepo.FindPersonById(*room.OwnerID)
-	if err != nil {
-		return nil, err
-	}
+
+	// person, err := service.personRepo.FindPersonById(*room.OwnerID)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	roomDocument, err := service.roomRepo.GetRoomDocumentByRoomID(roomID)
 	if err != nil {
 		return nil, err
 	}
 
-	jsonDataPerson, err := json.Marshal(person)
-	if err != nil {
-		return nil, err
-	}
+	// jsonDataPerson, err := json.Marshal(person)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	jsonDataRoomPrices, err := json.Marshal(price)
 	if err != nil {
 		return nil, err
@@ -302,10 +303,10 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		return nil, err
 	}
 
-	var jsonDataPersons map[string]interface{}
-	if err := json.Unmarshal(jsonDataPerson, &jsonDataPersons); err != nil {
-		fmt.Println("Error:", err)
-	}
+	// var jsonDataPersons map[string]interface{}
+	// if err := json.Unmarshal(jsonDataPerson, &jsonDataPersons); err != nil {
+	// 	fmt.Println("Error:", err)
+	// }
 	var jsonDataRoomPicture []map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonDataRoomPictures), &jsonDataRoomPicture); err != nil {
 		fmt.Println("Error:", err)
@@ -313,6 +314,28 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	var jsonDataRoomPrice []map[string]interface{}
 	if err := json.Unmarshal([]byte(jsonDataRoomPrices), &jsonDataRoomPrice); err != nil {
 		fmt.Println("Error:", err)
+	}
+
+	var ownerName *string
+
+	if room.OwnerID != nil {
+		person, err := service.personRepo.FindPersonById(*room.OwnerID)
+		if err != nil {
+			return nil, err
+		}
+		jsonDataPerson, err := json.Marshal(person)
+		if err != nil {
+			return nil, err
+		}
+		var jsonDataPersons map[string]interface{}
+		if err := json.Unmarshal(jsonDataPerson, &jsonDataPersons); err != nil {
+			fmt.Println("Error:", err)
+		}
+		if fullName, ok := jsonDataPersons["FullName"].(string); ok {
+			ownerName = &fullName
+		} else {
+			ownerName = nil
+		}
 	}
 
 	// Convert to RoomPictureResponse model
@@ -352,7 +375,7 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 	}
 
 	// Convert to RoomResponse model
-	ownerName := jsonDataPersons["FullName"].(string)
+	// ownerName := jsonDataPersons["FullName"].(string)
 	roomResponse := dto.RoomResponseDto{
 		ID:                 room.ID,
 		OwnerID:            room.OwnerID,
@@ -374,7 +397,7 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		RoomPictures:       roomPictures,
 		RoomDocuments:      roomDocuments,
 	}
-	roomResponse.OwnerName = &ownerName
+	roomResponse.OwnerName = ownerName
 
 	return &roomResponse, nil
 }
@@ -388,6 +411,7 @@ func (service *RoomService) ModifyRoom(roomID uint, updatedRoom models_Room.Room
 	// Update the existing room fields here...
 	existingRoom.RoomName = updatedRoom.RoomName
 	existingRoom.RoomNumber = updatedRoom.RoomNumber
+	existingRoom.OwnerID = updatedRoom.OwnerID
 	existingRoom.RoomAddress = updatedRoom.RoomAddress
 	existingRoom.ElectricNumber = updatedRoom.ElectricNumber
 	existingRoom.ElectricUserNumber = updatedRoom.ElectricUserNumber
@@ -530,6 +554,8 @@ func (service *RoomService) CreateRoomDocument(roomDocumentPictureData dto.TakeR
 		DocumentUrl: roomDocumentPictureData.RoomPictureUrl,
 		IsActive:    true,
 	}
+	fmt.Println(roomDocumentPictureData.RoomPictureUrl)
+	fmt.Println(roomDocumentPictureModel.DocumentUrl)
 
 	_, err := service.roomRepo.CreateRoomDocument(roomDocumentPictureModel)
 

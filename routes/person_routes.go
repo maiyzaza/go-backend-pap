@@ -14,4 +14,5 @@ func setupPersonRoutes(r *gin.RouterGroup, personController controller.PersonCon
 	r.POST("/editcontact", personController.UpdateContact)
 	r.POST("/deletecontact/:contactID", personController.DeleteContact)
 	r.POST("/editbankaccount", personController.UpdateBankAccount)
+	r.POST("/createcontact", personController.CreateContact)
 }

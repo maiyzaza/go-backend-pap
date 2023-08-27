@@ -5,7 +5,7 @@ import (
 	models_Document "PattayaAvenueProperty/models/Document"
 	models_Person "PattayaAvenueProperty/models/Person"
 	models_Room "PattayaAvenueProperty/models/Room"
-	models_Transaction "PattayaAvenueProperty/models/TransactionModel"
+	models_Transaction "PattayaAvenueProperty/models/Transaction"
 	"fmt"
 
 	"gorm.io/driver/mysql"

@@ -4,7 +4,6 @@ import (
 	models_Contract "PattayaAvenueProperty/models/Contract"
 	"PattayaAvenueProperty/repository"
 	dto "PattayaAvenueProperty/service/dto"
-	"fmt"
 	"time"
 )
 
@@ -282,11 +281,14 @@ func (service *ContractService) UpdateRoomContract(id uint, roomContractDto dto.
 	if err != nil {
 		return err
 	}
-	var x time.Time
-	x, err = time.Parse("2006-01-02", roomContractDto.CheckOutDate)
-	fmt.Println(x)
 
-	roomContract.CheckOutDate = &x
+	checkoutDateStr := roomContractDto.CheckOutDate
+	checkoutDate, err := time.Parse("2006-01-02", checkoutDateStr)
+	if err != nil {
+		return err
+	}
+
+	roomContract.CheckOutDate = &checkoutDate
 	roomContract.CheckOutWaterNumber = &roomContractDto.CheckOutWaterNumber
 	roomContract.CheckOutElectricNumber = &roomContractDto.CheckOutElectricNumber
 	roomContract.IsClosed = true

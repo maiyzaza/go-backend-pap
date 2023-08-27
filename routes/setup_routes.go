@@ -22,6 +22,10 @@ func SetUpRoutes(router *gin.RouterGroup, ctrl *app.SetupController) (*gin.Route
 		{
 			setupContractRoutes(contractRoute, ctrl.ContractController)
 		}
+		transactionRoute := route.Group("transactions")
+		{
+			setupTransactionRoutes(transactionRoute, ctrl.TransactionController)
+		}
 	}
 	return route, nil
 }
