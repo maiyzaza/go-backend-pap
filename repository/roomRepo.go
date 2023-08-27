@@ -264,12 +264,12 @@ func (repo RoomRepo) DeleteRoomPicture(roomPictureID uint) error {
 }
 
 // create RoomDocument and delete RoomDocument by change is_active to 0
-func (repo RoomRepo) CreateRoomDocument(roomDocumentPicture models_Document.RoomDocument) (*models_Document.RoomDocument, error) {
-	err := db.DB.Create(&roomDocumentPicture).Error
+func (repo RoomRepo) CreateRoomDocument(roomDocumentURL models_Document.RoomDocument) (*models_Document.RoomDocument, error) {
+	err := db.DB.Create(&roomDocumentURL).Error
 	if err != nil {
 		return nil, err
 	}
-	return &roomDocumentPicture, nil
+	return &roomDocumentURL, nil
 }
 
 func (repo RoomRepo) DeleteRoomDocument(roomDocumentPictureID uint) error {

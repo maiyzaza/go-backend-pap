@@ -338,7 +338,7 @@ func (controller *RoomController) DeleteRoomPicture(c *gin.Context) {
 
 // create RoomDocument and delete RoomDocument by change is_active to 0
 func (controller *RoomController) CreateRoomDocument(c *gin.Context) {
-	var body dto.TakeRoomPictureDataDto
+	var body dto.TakeRoomDocumentDataDto
 
 	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
