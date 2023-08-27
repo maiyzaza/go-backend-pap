@@ -4,6 +4,7 @@ import (
 	"PattayaAvenueProperty/constants"
 	"PattayaAvenueProperty/models/handler"
 	"PattayaAvenueProperty/service"
+	"PattayaAvenueProperty/service/dto"
 	"net/http"
 	"strconv"
 
@@ -47,6 +48,79 @@ func (controller *TransactionController) GetTransactionByID(c *gin.Context) {
 	}
 
 	data, err := controller.transactionService.GetTransactionByID(uint(transactionIDUint))
+	if err != nil {
+		_ = c.Error(err)
+		return
+	}
+
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       data,
+	})
+}
+
+// create document then create transaction put document_id in transaction
+func (controller *TransactionController) CreateTransaction(c *gin.Context) {
+	var body dto.CreateTransactionDto
+
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request body",
+		})
+		return
+	}
+
+	var createDocumentData dto.CreateDocumentDto = dto.CreateDocumentDto{
+		DocumentUrl: body.DocumentUrl,
+	}
+
+	documentData, err := controller.transactionService.CreateDocument(createDocumentData)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+
+	transactionData, err := controller.transactionService.CreateTransaction(body, documentData.ID)
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       transactionData,
+	})
+}
+
+// delete transaction by setting is_active to false
+func (controller *TransactionController) DeleteTransaction(c *gin.Context) {
+	transactionID := c.Param("transactionID")
+	// Convert transactionID to uint
+	transactionIDUint, err := strconv.ParseUint(transactionID, 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid transaction ID",
+		})
+		return
+	}
+
+	err = controller.transactionService.DeleteTransaction(uint(transactionIDUint))
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       nil,
+	})
+}
+
+// get all trasanction that is deleted
+func (controller *TransactionController) GetAllDeletedTransaction(c *gin.Context) {
+
+	data, err := controller.transactionService.GetAllDeletedTransaction()
 	if err != nil {
 		_ = c.Error(err)
 		return

@@ -385,7 +385,6 @@ func (service *RoomService) GetRoomByID(roomID uint) (*dto.RoomResponseDto, erro
 		RoomDocuments:      roomDocuments,
 	}
 	roomResponse.OwnerName = ownerName
-	fmt.Println(roomResponse.RoomPrices)
 
 	return &roomResponse, nil
 }

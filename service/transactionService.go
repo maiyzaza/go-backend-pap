@@ -1,6 +1,7 @@
 package service
 
 import (
+	models_Document "PattayaAvenueProperty/models/Document"
 	models_Transaction "PattayaAvenueProperty/models/Transaction"
 	"PattayaAvenueProperty/repository"
 	dto "PattayaAvenueProperty/service/dto"
@@ -76,13 +77,14 @@ func (service *TransactionService) GetTransactionByID(id uint) (*dto.Transaction
 		return nil, err
 	}
 
-	var transactionDocumentList []dto.TransactionDocumentResponseDto
+	// one transaction can have one document
+	var transactionDocumentList dto.TransactionDocumentResponseDto
 	for _, transactionDocument := range transactionDocuments {
 		if transaction.DocumentId == transactionDocument.ID {
-			transactionDocumentList = append(transactionDocumentList, dto.TransactionDocumentResponseDto{
+			transactionDocumentList = dto.TransactionDocumentResponseDto{
 				ID:          transactionDocument.ID,
 				DocumentUrl: transactionDocument.DocumentUrl,
-			})
+			}
 		}
 	}
 
@@ -106,36 +108,6 @@ func (service *TransactionService) GetTransactionByID(id uint) (*dto.Transaction
 		TransactionDocument: transactionDocumentList,
 	}, nil
 }
-
-// type Transaction struct {
-// 	ID             uint       `json:"id" gorm:"primaryKey"`
-// 	RoomContractID *uint      `json:"room_contract_id" gorm:"room_contract_id"`
-// 	DocumentId     uint       `json:"document_id" gorm:"document_id"`
-// 	CategoryType   string     `json:"category_type" gorm:"category_type"` // RENTAL, SELL, ELECTRIC, DEPT, ...
-// 	IsReceive      bool       `json:"is_receive" gorm:"is_receive"`       // did not update database yet
-// 	Description    string     `json:"description" gorm:"description"`
-// 	PaymentMethod  string     `json:"payment_method" gorm:"payment_method"` // CREDIT, CASH, ...
-// 	Amount         float32    `json:"amount" gorm:"amount"`
-// 	Remark         string     `json:"remark" gorm:"remark"`
-// 	Branch         string     `json:"branch" gorm:"branch"` // Branch1, ...
-// 	IsActive       bool       `json:"is_active" gorm:"is_active"`
-// 	CreatedAt      time.Time  `json:"created_at" gorm:"created_at"`
-// 	UpdatedAt      *time.Time `json:"updated_at" gorm:"updated_at"`
-
-// 	RoomContract models_Contract.RoomContract `json:"room_contract" gorm:"foreignKey:RoomContractID"`
-// 	Document     models_Document.Document     `json:"document" gorm:"foreignKey:DocumentId"`
-// }
-
-// type CreateTransactionDto struct {
-// 	RoomID               uint                           `json:"room_id"`
-// 	CategoryType         string                         `json:"category_type"`
-// 	IsReceive            bool                           `json:"is_receive"`
-// 	Description          string                         `json:"description"`
-// 	PaymentMethod        string                         `json:"payment_method"`
-// 	Amount               float32                        `json:"amount"`
-// 	Remark               string                         `json:"remark"`
-// 	TransactionDoucument []CreateTransactionDocumentDto `json:"transaction_document"`
-// }
 
 // create transaction
 func (service *TransactionService) CreateTransaction(transactionDto dto.CreateTransactionDto, documentID uint) (*dto.TransactionResponseDto, error) {
@@ -163,6 +135,63 @@ func (service *TransactionService) CreateTransaction(transactionDto dto.CreateTr
 		Amount:        transactionModel.Amount,
 		IsReceive:     transactionModel.IsReceive,
 	}, nil
+}
+
+// create document
+func (service *TransactionService) CreateDocument(documentDto dto.CreateDocumentDto) (*dto.TransactionDocumentResponseDto, error) {
+	document := models_Document.Document{
+		DocumentUrl: documentDto.DocumentUrl,
+	}
+
+	documentModel, err := service.transactionRepo.CreateDocument(&document)
+	if err != nil {
+		return nil, err
+	}
+	return &dto.TransactionDocumentResponseDto{
+		ID:          documentModel.ID,
+		DocumentUrl: documentModel.DocumentUrl,
+	}, nil
+}
+
+// delete transaction by setting is_active to false
+func (service *TransactionService) DeleteTransaction(id uint) error {
+	err := service.transactionRepo.DeleteTransaction(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// get all trasanction that is deleted
+func (service *TransactionService) GetAllDeletedTransaction() ([]dto.TransactionResponseDto, error) {
+	transactions, err := service.transactionRepo.GetAllDeletedTransaction()
+	if err != nil {
+		return nil, err
+	}
+	// get room address from room table, room id = room id from transaction
+	rooms, err := service.roomRepo.GetAllRoom()
+	if err != nil {
+		return nil, err
+	}
+
+	var result []dto.TransactionResponseDto
+	for _, transaction := range transactions {
+		var roomAddress string
+		for _, room := range rooms {
+			if transaction.RoomID != nil && *transaction.RoomID == room.ID {
+				roomAddress = room.RoomAddress
+			}
+		}
+		result = append(result, dto.TransactionResponseDto{
+			ID:            transaction.ID,
+			CatorgoryType: transaction.CategoryType,
+			RoomAddress:   roomAddress,
+			PaymentMethod: transaction.PaymentMethod,
+			Amount:        transaction.Amount,
+			IsReceive:     transaction.IsReceive,
+		})
+	}
+	return result, nil
 }
 
 // func (service *PersonService) GetProfiles() ([]dto.PersonDto, error) {

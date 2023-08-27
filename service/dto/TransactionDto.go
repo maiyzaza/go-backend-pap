@@ -10,15 +10,15 @@ type TransactionResponseDto struct {
 }
 
 type TransactionDetailResponseDto struct {
-	ID                  uint                             `json:"id" gorm:"primaryKey"`
-	CatorgoryType       string                           `json:"catorgory_type" gorm:"catorgory_type"`
-	Amount              float32                          `json:"amount" gorm:"amount"`
-	PaymentMethod       string                           `json:"payment_method" gorm:"payment_method"`
-	RoomAddress         string                           `json:"room_address" gorm:"room_address"`
-	IsReceive           string                           `json:"is_receive" gorm:"is_receive"`
-	Description         string                           `json:"description" gorm:"description"`
-	Remark              string                           `json:"remark" gorm:"remark"`
-	TransactionDocument []TransactionDocumentResponseDto `json:"transaction_document" gorm:"transaction_document"`
+	ID                  uint                           `json:"id" gorm:"primaryKey"`
+	CatorgoryType       string                         `json:"catorgory_type" gorm:"catorgory_type"`
+	Amount              float32                        `json:"amount" gorm:"amount"`
+	PaymentMethod       string                         `json:"payment_method" gorm:"payment_method"`
+	RoomAddress         string                         `json:"room_address" gorm:"room_address"`
+	IsReceive           string                         `json:"is_receive" gorm:"is_receive"`
+	Description         string                         `json:"description" gorm:"description"`
+	Remark              string                         `json:"remark" gorm:"remark"`
+	TransactionDocument TransactionDocumentResponseDto `json:"transaction_document" gorm:"transaction_document"`
 }
 
 type TransactionDocumentResponseDto struct {
@@ -35,6 +35,11 @@ type CreateTransactionDto struct {
 	Amount        float32 `json:"amount"`
 	Remark        string  `json:"remark"`
 	DocumentUrl   string  `json:"document_url"`
+}
+
+// create Document
+type CreateDocumentDto struct {
+	DocumentUrl string `json:"document_url"`
 }
 
 // type PlaceDto struct {
