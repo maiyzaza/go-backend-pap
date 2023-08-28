@@ -35,8 +35,8 @@ type ContractDetailDto struct {
 	Deposit                float32 `json:"deposit"`
 	CheckInDate            string  `json:"check_in_date"`
 	CheckOutDate           *string `json:"check_out_date"`
-	CheckInElectricNumber  int     `json:"check_in_electric_number"`
-	CheckInWaterNumber     int     `json:"check_in_water_number"`
+	CheckInElectricNumber  *int    `json:"check_in_electric_number"`
+	CheckInWaterNumber     *int    `json:"check_in_water_number"`
 	CheckOutElectricNumber *int    `json:"check_out_electric_number"`
 	CheckOutWaterNumber    *int    `json:"check_out_water_number"`
 	IsClosed               bool    `json:"is_closed"`
