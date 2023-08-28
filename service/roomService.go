@@ -479,7 +479,7 @@ func (service *RoomService) ModifyBuilding(buildingID uint, buildingName string)
 }
 
 // create RoomPrice and delete RoomPrice by change is_active to 0
-func (service *RoomService) CreateRoomPrice(data dto.TakeRoomPriceDataDto) error {
+func (service *RoomService) CreateRoomPrice(data dto.TakeRoomPriceDataDto) (*models_Room.RoomPrice, error) {
 	roomPriceModel := models_Room.RoomPrice{
 		RoomID:          data.RoomID,
 		Amount:          data.Amount,
@@ -492,12 +492,12 @@ func (service *RoomService) CreateRoomPrice(data dto.TakeRoomPriceDataDto) error
 		IsActive:        true,
 	}
 
-	_, err := service.roomRepo.CreateRoomPrice(roomPriceModel)
+	roomPrice, err := service.roomRepo.CreateRoomPrice(roomPriceModel)
 
 	if err != nil {
-		return err
+		return &models_Room.RoomPrice{}, err
 	}
-	return nil
+	return roomPrice, nil
 }
 
 func (service *RoomService) DeleteRoomPrice(roomPriceID uint) error {

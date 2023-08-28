@@ -256,7 +256,7 @@ func (controller *RoomController) CreateRoomPrice(c *gin.Context) {
 		})
 		return
 	}
-	err := controller.roomService.CreateRoomPrice(body)
+	roomPice, err := controller.roomService.CreateRoomPrice(body)
 	if err != nil {
 		c.Error(err)
 		return
@@ -264,7 +264,7 @@ func (controller *RoomController) CreateRoomPrice(c *gin.Context) {
 	c.JSON(http.StatusOK, handler.Wrapper{
 		StatusCode: http.StatusOK,
 		Message:    constants.SUCCESS,
-		Data:       nil,
+		Data:       roomPice,
 	})
 }
 
