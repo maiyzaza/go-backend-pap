@@ -121,6 +121,7 @@ func (service *TransactionService) CreateTransaction(transactionDto dto.CreateTr
 		PaymentMethod: transactionDto.PaymentMethod,
 		Amount:        transactionDto.Amount,
 		Remark:        transactionDto.Remark,
+		IsActive:      true,
 	}
 
 	transactionModel, err := service.transactionRepo.CreateTransaction(&transaction)
