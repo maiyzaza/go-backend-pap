@@ -22,5 +22,6 @@ func setupRoomRoutes(r *gin.RouterGroup, roomController controller.RoomControlle
 	r.POST("/editroompicture/:roomPictureID", roomController.DeleteRoomPicture)
 	r.POST("/roomdocument", roomController.CreateRoomDocument)
 	r.POST("/editroomdocument/:roomDocumentID", roomController.DeleteRoomDocument)
+	r.GET("/roomname", roomController.GetAllRoomName)
 
 }

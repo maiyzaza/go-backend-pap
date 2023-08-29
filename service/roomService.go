@@ -559,3 +559,20 @@ func (service *RoomService) DeleteRoomDocument(roomDocumentPictureID uint) error
 	}
 	return nil
 }
+
+// get all room number and room id and room address
+func (service *RoomService) GetAllRoomName() ([]dto.RoomNameDto, error) {
+	rooms, err := service.roomRepo.GetAllRoom()
+	if err != nil {
+		return nil, err
+	}
+	var result []dto.RoomNameDto
+	for _, room := range rooms {
+		result = append(result, dto.RoomNameDto{
+			RoomID:      room.ID,
+			RoomNumber:  room.RoomNumber,
+			RoomAddress: room.RoomAddress,
+		})
+	}
+	return result, nil
+}

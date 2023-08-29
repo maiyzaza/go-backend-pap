@@ -381,3 +381,17 @@ func (controller *RoomController) DeleteRoomDocument(c *gin.Context) {
 		Data:       nil,
 	})
 }
+
+// get all room number and room id and room address
+func (controller *RoomController) GetAllRoomName(c *gin.Context) {
+	data, err := controller.roomService.GetAllRoomName()
+	if err != nil {
+		c.Error(err)
+		return
+	}
+	c.JSON(http.StatusOK, handler.Wrapper{
+		StatusCode: http.StatusOK,
+		Message:    constants.SUCCESS,
+		Data:       data,
+	})
+}

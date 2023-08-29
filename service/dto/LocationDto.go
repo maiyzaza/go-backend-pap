@@ -42,3 +42,10 @@ type CreateRoomDto struct {
 	FloorID    uint   `json:"floor_id"`
 	RoomNumber string `json:"room_number"`
 }
+
+// all room name, room id, room address
+type RoomNameDto struct {
+	RoomID      uint   `json:"room_id" gorm:"column:room_id"`
+	RoomNumber  string `json:"room_number" gorm:"column:room_number"`
+	RoomAddress string `json:"room_address" gorm:"column:room_address"`
+}
