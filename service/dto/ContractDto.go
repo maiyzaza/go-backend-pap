@@ -29,6 +29,7 @@ type ContractDetailDto struct {
 	RoomNumber             string  `json:"room_number"`
 	RoomAddress            string  `json:"room_address"`
 	TenantName             string  `json:"tenant_name"`
+	IdentifyNumber         string  `json:"identify_number"`
 	StartContractDate      string  `json:"start_contract_date"`
 	EndContractDate        string  `json:"end_contract_date"`
 	Rental                 float32 `json:"rental"`

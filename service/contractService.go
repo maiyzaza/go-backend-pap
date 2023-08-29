@@ -153,23 +153,19 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 	if err != nil {
 		return dto.ContractDetailDto{}, err
 	}
-	contact, err := service.personRepo.GetAllContact()
-	if err != nil {
-		return dto.ContractDetailDto{}, err
-	}
 	personContract, err := service.contractRepo.GetAllPersonContract()
 	if err != nil {
 		return dto.ContractDetailDto{}, err
 	}
 
 	var tenantName string
+	var identifyNumber string
 	for _, personContract := range personContract {
 		if roomContract.ID == personContract.RoomContractID {
 			for _, person := range person {
-				for _, contact := range contact {
-					if person.ID == contact.PersonID {
-						tenantName = person.FullName
-					}
+				if person.ID == personContract.PersonID {
+					tenantName = person.FullName
+					identifyNumber = person.IdentityNumber
 				}
 			}
 		}
@@ -197,6 +193,7 @@ func (service *ContractService) GetRoomContractByID(id uint) (dto.ContractDetail
 		RoomNumber:             RoomNumber,
 		RoomAddress:            RoomAddress,
 		TenantName:             tenantName,
+		IdentifyNumber:         identifyNumber,
 		StartContractDate:      roomContract.StartContractDate.Format("2006-01-02 15:04:05"),
 		EndContractDate:        roomContract.EndContractDate.Format("2006-01-02 15:04:05"),
 		Rental:                 roomContract.Rental,
