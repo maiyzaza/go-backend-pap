@@ -252,11 +252,14 @@ func (service *RoomService) CreateFloor(buildingID uint, floorNumber string) err
 	return nil
 }
 
-func (service *RoomService) CreateRoom(floorID uint, roomNumber string) error {
+func (service *RoomService) CreateRoom(roomData dto.CreateRoomDto) error {
 	roomModel := models_Room.Room{
-		RoomNumber: roomNumber,
-		FloorID:    floorID,
-		IsActive:   true,
+		FloorID:      roomData.FloorID,
+		RoomNumber:   roomData.RoomNumber,
+		SizeSQM:      roomData.SizeSQM,
+		OwnerID:      &roomData.OwnerID,
+		StatusOfRoom: roomData.StatusOfRoom,
+		IsActive:     true,
 	}
 
 	_, err := service.roomRepo.CreateRoom(roomModel)

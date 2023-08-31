@@ -41,7 +41,7 @@ func (service *ContractService) GetAllContract() ([]dto.ContractResponseDto, err
 	var result []dto.ContractResponseDto
 	for _, contract := range roomContract {
 		var tenantName string
-		var roomNumber string
+		var roomAddress string
 		startContractDateString := contract.StartContractDate.Format("2006-01-02 15:04:05")
 		endContractDateString := contract.EndContractDate.Format("2006-01-02 15:04:05")
 		for _, personContract := range personContract {
@@ -55,7 +55,7 @@ func (service *ContractService) GetAllContract() ([]dto.ContractResponseDto, err
 		}
 		for _, room := range rooms {
 			if contract.RoomID == room.ID {
-				roomNumber = room.RoomNumber
+				roomAddress = room.RoomAddress
 			}
 		}
 
@@ -74,7 +74,7 @@ func (service *ContractService) GetAllContract() ([]dto.ContractResponseDto, err
 			Rental:            contract.Rental,
 			Deposit:           contract.Deposit,
 			TenantName:        tenantName,
-			RoomNumber:        roomNumber,
+			RoomAddress:       roomAddress,
 			ContractStatus:    contractStatus,
 		})
 	}

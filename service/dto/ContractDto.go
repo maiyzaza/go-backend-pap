@@ -8,7 +8,7 @@ type ContractResponseDto struct {
 	Rental            float32 `json:"rental"`
 	Deposit           float32 `json:"deposit"`
 	TenantName        string  `json:"tenant_name"`
-	RoomNumber        string  `json:"room_number"`
+	RoomAddress       string  `json:"room_address"`
 	ContractStatus    string  `json:"contract_status"`
 }
 
