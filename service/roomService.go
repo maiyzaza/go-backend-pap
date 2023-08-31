@@ -259,6 +259,7 @@ func (service *RoomService) CreateRoom(roomData dto.CreateRoomDto) error {
 		SizeSQM:      roomData.SizeSQM,
 		OwnerID:      &roomData.OwnerID,
 		StatusOfRoom: roomData.StatusOfRoom,
+		RoomAddress:  roomData.RoomAddress,
 		IsActive:     true,
 	}
 
