@@ -5,6 +5,7 @@ import (
 	models_Transaction "PattayaAvenueProperty/models/Transaction"
 	"PattayaAvenueProperty/repository"
 	dto "PattayaAvenueProperty/service/dto"
+	"time"
 )
 
 type TransactionService struct {
@@ -41,6 +42,8 @@ func (service *TransactionService) GetAllTransaction() ([]dto.TransactionRespons
 				roomAddress = room.RoomAddress
 			}
 		}
+		var AddSevenHrs = transaction.CreatedAt.Add(7 * time.Hour)
+
 		result = append(result, dto.TransactionResponseDto{
 			ID:            transaction.ID,
 			CatorgoryType: transaction.CategoryType,
@@ -48,6 +51,7 @@ func (service *TransactionService) GetAllTransaction() ([]dto.TransactionRespons
 			PaymentMethod: transaction.PaymentMethod,
 			Amount:        transaction.Amount,
 			IsReceive:     transaction.IsReceive,
+			CreateAt:      AddSevenHrs.String(),
 		})
 	}
 	return result, nil
@@ -96,6 +100,8 @@ func (service *TransactionService) GetTransactionByID(id uint) (*dto.Transaction
 		isReceive = "not receive"
 	}
 
+	var AddSevenHrs = transaction.CreatedAt.Add(7 * time.Hour)
+
 	return &dto.TransactionDetailResponseDto{
 		ID:                  transaction.ID,
 		CatorgoryType:       transaction.CategoryType,
@@ -106,6 +112,7 @@ func (service *TransactionService) GetTransactionByID(id uint) (*dto.Transaction
 		Description:         transaction.Description,
 		Remark:              transaction.Remark,
 		TransactionDocument: transactionDocumentList,
+		CreateAt:            AddSevenHrs.String(),
 	}, nil
 }
 
@@ -184,6 +191,9 @@ func (service *TransactionService) GetAllDeletedTransaction() ([]dto.Transaction
 				roomAddress = room.RoomAddress
 			}
 		}
+
+		var AddSevenHrs = transaction.CreatedAt.Add(7 * time.Hour)
+
 		result = append(result, dto.TransactionResponseDto{
 			ID:            transaction.ID,
 			CatorgoryType: transaction.CategoryType,
@@ -191,6 +201,7 @@ func (service *TransactionService) GetAllDeletedTransaction() ([]dto.Transaction
 			PaymentMethod: transaction.PaymentMethod,
 			Amount:        transaction.Amount,
 			IsReceive:     transaction.IsReceive,
+			CreateAt:      AddSevenHrs.String(),
 		})
 	}
 	return result, nil
